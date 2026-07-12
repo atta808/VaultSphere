@@ -10,6 +10,8 @@ import { VaultProvider } from './context/VaultContext';
 import { NotificationProvider } from './context/NotificationContext';
 import { DatabaseProvider } from './database/DatabaseProvider';
 import RootNavigator from './navigation/RootNavigator';
+import { GlobalImportProgress } from './components/import/GlobalImportProgress';
+import { DuplicateResolutionDialog } from './components/import/DuplicateResolutionDialog';
 import { navigationRef } from './navigation/navigationRef';
 import { fonts } from './constants/fonts';
 
@@ -48,6 +50,8 @@ const MainApp = () => {
             <NotificationProvider>
               <NavigationContainer ref={navigationRef} theme={navigationTheme}>
                 <RootNavigator />
+                <GlobalImportProgress />
+                <DuplicateResolutionDialog />
               </NavigationContainer>
             </NotificationProvider>
           </VaultProvider>

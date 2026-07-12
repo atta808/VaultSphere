@@ -3,7 +3,7 @@ import FolderService from './FolderService';
 import CategoryService from './CategoryService';
 import FavoriteService from './FavoriteService';
 import StorageService from './StorageService';
-import { validateFile } from '../../utils/fileValidation';
+import ImportService from '../import/ImportService';
 
 class VaultService {
 
@@ -16,15 +16,15 @@ class VaultService {
   }
 
   // ==========================================
-  // DOCUMENT LIFECYCLE
+  // DOCUMENT ACQUISITION & LIFECYCLE
   // ==========================================
 
-  async importDocument(sourceUri, originalName, mimeType, size, folderId = null) {
-    // Validate file before importing
-    validateFile({ name: originalName, mimeType, size });
-
-    // Orchestrate through DocumentService
-    return DocumentService.importDocument(sourceUri, originalName, mimeType, size, folderId);
+  /**
+   * Imports files asynchronously via the ImportQueue.
+   * Replaces the old importDocument to use the new Import Engine architecture.
+   */
+  async importDocuments(files, folderId = null) {
+    return ImportService.queueFiles(files, folderId);
   }
 
   async getAllDocuments() {
@@ -36,7 +36,6 @@ class VaultService {
   }
 
   async renameDocument(id, newName) {
-    validateFile({ name: newName });
     return DocumentService.renameDocument(id, newName);
   }
 

@@ -98,6 +98,30 @@ class DocumentService {
     await this.repository.update(id, { originalName: newName, updatedAt: now });
     return await this.repository.findById(id);
   }
+
+  async replaceDocument(id, sourceUri, newName, mimeType, newSize) {
+    const doc = await this.repository.findById(id);
+    if (!doc) throw new VaultError('Document not found for replacement.');
+
+    // Replace the physical file. Keep the old underlying filename (doc.name) so links/refs don't break,
+    // OR replace it with a new file but update the size and mimeType.
+    // Wait, the requirement says "Preserve: UUID, Database ID, Folder...".
+    // And "Generate safe filename" implies we might give it a new name. Wait, if it's replace, we just replace the physical file.
+
+    // We will just replace the physical file for doc.name to preserve underlying path.
+    // If the originalName changed (e.g., from duplicate dialog), we update originalName.
+    const fileResult = await FileManager.replaceFile(sourceUri, doc.name);
+
+    const now = new Date().toISOString();
+    await this.repository.update(id, {
+       originalName: newName, // Update the display name
+       size: fileResult.size || newSize,
+       mimeType: mimeType,
+       updatedAt: now
+    });
+
+    return await this.repository.findById(id);
+  }
 }
 
 export default new DocumentService();

@@ -24,7 +24,7 @@ export const calculateMimeType = (extension) => {
 };
 
 export const generateMetadata = (fileParams) => {
-  const { name, size, uri, mimeType: providedMimeType } = fileParams;
+  const { name, size, mimeType: providedMimeType } = fileParams;
 
   if (!name) {
     throw new MetadataError('Cannot generate metadata: file name is missing.');

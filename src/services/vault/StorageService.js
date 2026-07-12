@@ -42,7 +42,7 @@ class StorageService {
       try {
         freeSpace = await FileSystem.getFreeDiskStorageAsync();
         totalSpace = await FileSystem.getTotalDiskCapacityAsync();
-      } catch (e) {
+      } catch (_e) {
         // Fallback for environments that do not support it
       }
 
@@ -85,7 +85,7 @@ class StorageService {
         }
       }
       return totalSize;
-    } catch (error) {
+    } catch (_error) {
       return 0;
     }
   }
