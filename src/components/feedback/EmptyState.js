@@ -1,14 +1,15 @@
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../hooks/useTheme';
-import { PremiumButton } from '../buttons/PremiumButton';
 
 export const EmptyState = memo(({
   icon,
+  iconName, // if provided, use Ionicons
   title,
   description,
-  actionLabel,
-  onActionPress,
+
+
   style,
   testID,
 }) => {
@@ -16,9 +17,11 @@ export const EmptyState = memo(({
 
   return (
     <View style={[styles.container, { padding: spacing[24] }, style]} testID={testID}>
-      {icon && (
+      {(icon || iconName) && (
         <View style={[styles.iconContainer, { marginBottom: spacing[16] }]}>
-          {icon}
+          {icon ? icon : (
+            <Ionicons name={iconName} size={64} color={colors.border} />
+          )}
         </View>
       )}
       {title && (
@@ -27,18 +30,9 @@ export const EmptyState = memo(({
         </Text>
       )}
       {description && (
-        <Text style={[typography.body, { color: colors.text.secondary, textAlign: 'center', marginBottom: spacing[24] }]}>
+        <Text style={[typography.body1, { color: colors.text.secondary, textAlign: 'center', marginBottom: spacing[24] }]}>
           {description}
         </Text>
-      )}
-      {actionLabel && onActionPress && (
-        <PremiumButton
-          onPress={onActionPress}
-          variant="primary"
-          fullWidth={false}
-        >
-          {actionLabel}
-        </PremiumButton>
       )}
     </View>
   );
