@@ -1,15 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState , useCallback } from 'react';
 import { View, Switch } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation , useFocusEffect } from '@react-navigation/native';
 import { ScreenContainer } from '../components/layout/ScreenContainer';
 import { SpherePageHeader } from '../components/headers/SpherePageHeader';
 import { SphereSectionCard } from '../components/cards/SphereSectionCard';
 import { SphereListItem } from '../components/lists/SphereListItem';
 import { useTheme } from '../hooks/useTheme';
 import { ROUTES } from '../config/routes';
+import VaultService from '../services/vault/VaultService';
+import { useDatabase } from '../database/DatabaseProvider';
+import { SphereInfoRow } from '../components/common/SphereInfoRow';
 
 export default function SettingsScreen() {
   const navigation = useNavigation();
+  const { databaseReady } = useDatabase();
+  const [stats, setStats] = useState({
+    usedDocs: 0,
+    usedTrash: 0,
+    usedTemp: 0,
+    totalUsed: 0,
+    freeSpace: 0,
+    totalSpace: 0
+  });
+
+  useFocusEffect(
+    useCallback(() => {
+      VaultService.getVaultStatistics().then(setStats).catch(console.error);
+    }, [])
+  );
+
+  const formatSize = (bytes) => {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
   const { isDark, toggleTheme, colors, spacing } = useTheme();
 
   const [biometrics, setBiometrics] = useState(true);
@@ -77,6 +103,18 @@ export default function SettingsScreen() {
               <Switch value={notifications} onValueChange={setNotifications} trackColor={{ true: colors.primary }} />
             }
           />
+        </View>
+      </SphereSectionCard>
+
+      <SphereSectionCard title="Database & Storage">
+        <View style={{ borderRadius: 8, overflow: 'hidden' }}>
+          <SphereInfoRow label="Status" value={databaseReady ? 'Connected' : 'Disconnected'} />
+          <SphereInfoRow label="Provider" value="expo-sqlite" />
+          <SphereInfoRow label="Documents" value={formatSize(stats.usedDocs)} />
+          <SphereInfoRow label="Trash" value={formatSize(stats.usedTrash)} />
+          <SphereInfoRow label="Temp" value={formatSize(stats.usedTemp)} />
+          <SphereInfoRow label="Total Used" value={formatSize(stats.totalUsed)} />
+          <SphereInfoRow label="Free Space" value={formatSize(stats.freeSpace)} showDivider={false} />
         </View>
       </SphereSectionCard>
 

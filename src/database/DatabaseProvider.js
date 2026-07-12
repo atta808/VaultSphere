@@ -23,6 +23,10 @@ export function DatabaseProvider({ children }) {
 
       await DatabaseService.initialize();
 
+      // Initialize StorageService after Database is ready
+      const StorageService = require('../services/vault/StorageService').default;
+      await StorageService.initialize();
+
       setDatabaseReady(true);
     } catch (e) {
       console.error('Failed to initialize DatabaseProvider:', e);
