@@ -10,6 +10,7 @@ import { SphereFAB } from '../components/buttons/SphereFAB';
 import { useTheme } from '../hooks/useTheme';
 import { ROUTES } from '../config/routes';
 import VaultService from '../services/vault/VaultService';
+import ImportQueue from '../services/import/ImportQueue';
 
 export default function VaultScreen() {
   const navigation = useNavigation();
@@ -36,6 +37,32 @@ export default function VaultScreen() {
       loadVaultData();
     }, [])
   );
+
+  // Listen to queue completion to automatically refresh
+  React.useEffect(() => {
+    const unsubscribe1 = ImportQueue.on('IMPORT_COMPLETED', async ({ job, state }) => {
+       await loadVaultData();
+       // Auto-navigate if a single import finished
+       if (state.batch.total === 1 && state.batch.completed === 1 && job) {
+           // The job doesn't contain the document ID directly unless we store it.
+           // However, we just loaded the data. Let's find the most recent doc.
+           const docs = await VaultService.getAllDocuments();
+           const newestDoc = docs.filter(d => !d.deletedAt).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+           if (newestDoc) {
+               navigation.navigate(ROUTES.DOCUMENT_DETAILS, { documentId: newestDoc.id });
+           }
+       }
+    });
+
+    const unsubscribe2 = ImportQueue.on('QUEUE_EMPTY', () => {
+       loadVaultData();
+    });
+
+    return () => {
+       unsubscribe1();
+       unsubscribe2();
+    };
+  }, [navigation]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);

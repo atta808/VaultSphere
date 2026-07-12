@@ -47,3 +47,46 @@ export class MetadataError extends VaultError {
     this.name = 'MetadataError';
   }
 }
+
+export class ImportError extends VaultError {
+  constructor(message) {
+    super(message);
+    this.name = 'ImportError';
+  }
+}
+
+export class DuplicateFileError extends VaultError {
+  constructor(message, duplicateInfo) {
+    super(message);
+    this.name = 'DuplicateFileError';
+    this.duplicateInfo = duplicateInfo;
+  }
+}
+
+export class UnsupportedFileError extends VaultError {
+  constructor(message) {
+    super(message);
+    this.name = 'UnsupportedFileError';
+  }
+}
+
+export class PermissionDeniedError extends VaultError {
+  constructor(message) {
+    super(message);
+    this.name = 'PermissionDeniedError';
+  }
+}
+
+export class InvalidFileError extends VaultError {
+  constructor(message) {
+    super(message);
+    this.name = 'InvalidFileError';
+  }
+}
+
+export class CancelledImportError extends VaultError {
+  constructor(message) {
+    super(message);
+    this.name = 'CancelledImportError';
+  }
+}

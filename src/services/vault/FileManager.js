@@ -1,5 +1,5 @@
 import * as FileSystem from 'expo-file-system';
-import { STORAGE_PATHS, getDocumentPath, getTrashPath } from '../../utils/storageHelpers';
+import { getDocumentPath, getTrashPath } from '../../utils/storageHelpers';
 import { normalizePath, generateUniqueFilename } from '../../utils/fileNaming';
 import { FileImportError, FileMoveError, StorageError } from '../../utils/errors/customErrors';
 
@@ -94,7 +94,7 @@ class FileManager {
       const normalized = normalizePath(path);
       const info = await FileSystem.getInfoAsync(normalized);
       return info.exists;
-    } catch (e) {
+    } catch (_e) {
       return false;
     }
   }
@@ -104,10 +104,34 @@ class FileManager {
       const normalized = normalizePath(path);
       const info = await FileSystem.getInfoAsync(normalized);
       return info.exists ? (info.size || 0) : 0;
-    } catch (e) {
+    } catch (_e) {
       return 0;
     }
   }
-}
+  async replaceFile(sourceUri, filename) {
+    try {
+      const destPath = getDocumentPath(filename);
+      // Ensure target exists before deleting/replacing
+      const exists = await this.fileExists(destPath);
+      if (exists) {
+          await FileSystem.deleteAsync(destPath, { idempotent: true });
+      }
 
+      await FileSystem.copyAsync({
+        from: sourceUri,
+        to: destPath,
+      });
+
+      const sourceInfo = await FileSystem.getInfoAsync(destPath);
+
+      return {
+        path: destPath,
+        filename: filename,
+        size: sourceInfo.size || 0
+      };
+    } catch (error) {
+      throw new FileImportError(`Failed to replace file: ${error.message}`);
+    }
+  }
+}
 export default new FileManager();
