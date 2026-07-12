@@ -8,6 +8,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ThemeProvider, ThemeContext } from './context/ThemeContext';
 import { VaultProvider } from './context/VaultContext';
 import { NotificationProvider } from './context/NotificationContext';
+import { DatabaseProvider } from './database/DatabaseProvider';
 import RootNavigator from './navigation/RootNavigator';
 import { navigationRef } from './navigation/navigationRef';
 import { fonts } from './constants/fonts';
@@ -73,8 +74,10 @@ export default function AppProviders() {
   }
 
   return (
-    <ThemeProvider>
-      <MainApp />
-    </ThemeProvider>
+    <DatabaseProvider>
+      <ThemeProvider>
+        <MainApp />
+      </ThemeProvider>
+    </DatabaseProvider>
   );
 }
