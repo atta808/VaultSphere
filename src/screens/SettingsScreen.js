@@ -13,6 +13,13 @@ import { SphereInfoRow } from '../components/common/SphereInfoRow';
 import { useAuthentication } from '../context/AuthenticationContext';
 import SecurityService from '../services/security/SecurityService';
 
+import BackupService from '../services/backup/BackupService';
+import RestoreService from '../services/backup/RestoreService';
+import ExportService from '../services/backup/ExportService';
+import ImportBackupService from '../services/backup/ImportBackupService';
+import LocalStorageProvider from '../services/backup/providers/LocalStorageProvider';
+import { DeviceEventEmitter } from 'react-native';
+
 export default function SettingsScreen() {
   const navigation = useNavigation();
   const { hasPinSetup, lock } = useAuthentication();
@@ -24,6 +31,15 @@ export default function SettingsScreen() {
     totalUsed: 0,
     freeSpace: 0,
     totalSpace: 0
+  });
+
+  const [backupStats, setBackupStats] = useState({
+    lastBackup: 'Never',
+    backupSize: 0,
+    backupStatus: 'Ready',
+    backupProvider: 'Local Storage',
+    backupCount: 0,
+    currentPath: null,
   });
 
   useFocusEffect(
@@ -53,8 +69,43 @@ export default function SettingsScreen() {
   useFocusEffect(
     useCallback(() => {
       loadSecuritySettings();
+      loadBackupStats();
+
+      const subStarted = DeviceEventEmitter.addListener('BACKUP_STARTED', () => setBackupStats(prev => ({...prev, backupStatus: 'Backing up...'})));
+      const subCompleted = DeviceEventEmitter.addListener('BACKUP_COMPLETED', () => { setBackupStats(prev => ({...prev, backupStatus: 'Success'})); loadBackupStats(); });
+      const subFailed = DeviceEventEmitter.addListener('BACKUP_FAILED', () => setBackupStats(prev => ({...prev, backupStatus: 'Failed'})));
+
+      const resStarted = DeviceEventEmitter.addListener('RESTORE_STARTED', () => setBackupStats(prev => ({...prev, backupStatus: 'Restoring...'})));
+      const resCompleted = DeviceEventEmitter.addListener('RESTORE_COMPLETED', () => { setBackupStats(prev => ({...prev, backupStatus: 'Ready'})); loadBackupStats(); });
+      const resFailed = DeviceEventEmitter.addListener('RESTORE_FAILED', () => setBackupStats(prev => ({...prev, backupStatus: 'Restore Failed'})));
+
+      return () => {
+        subStarted.remove();
+        subCompleted.remove();
+        subFailed.remove();
+        resStarted.remove();
+        resCompleted.remove();
+        resFailed.remove();
+      };
     }, [])
   );
+
+  const loadBackupStats = async () => {
+    try {
+        const latest = await LocalStorageProvider.getLatestBackup();
+        const stats = await LocalStorageProvider.getStorageStatistics();
+        setBackupStats({
+           lastBackup: latest?.manifest ? new Date(latest.manifest.createdDate).toLocaleString() : 'Never',
+           backupSize: stats.usedSize,
+           backupStatus: 'Ready',
+           backupProvider: 'Local Storage',
+           backupCount: stats.backupCount,
+           currentPath: latest?.path
+        });
+    } catch (e) {
+        console.error('Failed to load backup stats', e);
+    }
+  };
 
   const loadSecuritySettings = async () => {
     const isAppLock = await SecurityService.settings.isAppLockEnabled();
@@ -269,11 +320,58 @@ export default function SettingsScreen() {
       <SphereSectionCard title="Backup">
         <View style={{ borderRadius: 8, overflow: 'hidden' }}>
           <SphereListItem
-            title="Cloud Backup"
-            subtitle="Last backup: Never"
+            title="Backup Now"
+            subtitle="Create a new vault backup"
             icon="cloud-upload"
-            onPress={() => {}}
+            onPress={() => BackupService.createBackup().catch(e => alert(e.message))}
+            showDivider
           />
+          <SphereListItem
+            title="Restore Backup"
+            subtitle="Restore vault from local backup"
+            icon="download"
+            onPress={() => {
+                if (backupStats.currentPath) {
+                    RestoreService.restoreBackup(backupStats.currentPath).catch(e => alert(e.message));
+                } else {
+                    alert('No local backups found.');
+                }
+            }}
+            showDivider
+          />
+          <SphereListItem
+            title="Export Vault"
+            subtitle="Share backup package"
+            icon="share-outline"
+            onPress={() => {
+                if (backupStats.currentPath) {
+                    ExportService.exportBackup(backupStats.currentPath).catch(e => alert(e.message));
+                } else {
+                    alert('Create a backup first to export.');
+                }
+            }}
+            showDivider
+          />
+          <SphereListItem
+            title="Import Backup"
+            subtitle="Select a manifest.json"
+            icon="document-attach"
+            onPress={() => ImportBackupService.selectAndImportBackup().then(path => {
+                if (path) RestoreService.restoreBackup(path).catch(e => alert(e.message));
+            }).catch(e => alert(e.message))}
+            showDivider
+          />
+          <SphereListItem
+            title="Automatic Backup"
+            subtitle="Manual Only (Phase 9)"
+            icon="time"
+            showDivider
+          />
+          <SphereInfoRow label="Backup Provider" value={backupStats.backupProvider} />
+          <SphereInfoRow label="Last Backup" value={backupStats.lastBackup} />
+          <SphereInfoRow label="Backup Size" value={formatSize(backupStats.backupSize)} />
+          <SphereInfoRow label="Backup Count" value={String(backupStats.backupCount)} />
+          <SphereInfoRow label="Backup Status" value={backupStats.backupStatus} showDivider={false} />
         </View>
       </SphereSectionCard>
 

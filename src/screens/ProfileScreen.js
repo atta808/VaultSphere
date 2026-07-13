@@ -8,12 +8,16 @@ import { EmptyState } from '../components/feedback/EmptyState';
 import { useTheme } from '../hooks/useTheme';
 import { useFocusEffect } from '@react-navigation/native';
 import SecurityService from '../services/security/SecurityService';
+import LocalStorageProvider from '../services/backup/providers/LocalStorageProvider';
 
 export default function ProfileScreen() {
   const { spacing, colors, radius } = useTheme();
   const [securityStatus, setSecurityStatus] = React.useState('Loading...');
   const [biometricStatus, setBiometricStatus] = React.useState('Loading...');
   const [pinStatus, setPinStatus] = React.useState('Loading...');
+
+  const [backupStatus, setBackupStatus] = React.useState('Loading...');
+  const [lastBackup, setLastBackup] = React.useState('Loading...');
 
   useFocusEffect(
     React.useCallback(() => {
@@ -30,6 +34,20 @@ export default function ProfileScreen() {
 
       const isBioEnabled = await SecurityService.biometrics.isBiometricEnabledByUser();
       setBiometricStatus(isBioEnabled ? 'Enabled' : 'Disabled');
+
+      try {
+          const latest = await LocalStorageProvider.getLatestBackup();
+          if (latest?.manifest) {
+              setBackupStatus('Configured');
+              setLastBackup(new Date(latest.manifest.createdDate).toLocaleDateString());
+          } else {
+              setBackupStatus('Not Configured');
+              setLastBackup('Never');
+          }
+      } catch (e) {
+          setBackupStatus('Unknown');
+          setLastBackup('Unknown');
+      }
   };
 
   return (
@@ -53,6 +71,15 @@ export default function ProfileScreen() {
         <SphereInfoRow label="Overall Status" value={securityStatus} />
         <SphereInfoRow label="PIN Status" value={pinStatus} />
         <SphereInfoRow label="Biometric Status" value={biometricStatus} showDivider={false} />
+      </SphereSectionCard>
+
+      <SphereSectionCard title="Backup Status">
+        <SphereInfoRow label="Backup Status" value={backupStatus} />
+        <SphereInfoRow label="Last Backup" value={lastBackup} showDivider={false} />
+      </SphereSectionCard>
+
+      <SphereSectionCard title="Storage Usage">
+        <SphereInfoRow label="Storage Utilized" value="Calculating..." showDivider={false} />
       </SphereSectionCard>
 
       <SphereSectionCard title="Statistics">
