@@ -11,6 +11,7 @@ import { useTheme } from '../hooks/useTheme';
 import { ROUTES } from '../config/routes';
 import VaultService from '../services/vault/VaultService';
 import ImportQueue from '../services/import/ImportQueue';
+import { OCRBadge } from '../components/badges/OCRBadge';
 
 export default function VaultScreen() {
   const navigation = useNavigation();
@@ -120,6 +121,7 @@ export default function VaultScreen() {
               >
                 <Text style={{ color: colors.text }}>{doc.originalName || doc.name}</Text>
                 <Text style={{ color: colors.textSecondary, fontSize: 12 }}>{doc.mimeType}</Text>
+                <OCRBadge documentId={doc.id} />
               </TouchableOpacity>
             ))
           )}

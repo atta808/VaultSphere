@@ -4,6 +4,7 @@ import CategoryService from './CategoryService';
 import FavoriteService from './FavoriteService';
 import StorageService from './StorageService';
 import ImportService from '../import/ImportService';
+import OCRQueue from '../../ai/queue/OCRQueue';
 
 class VaultService {
 
@@ -116,6 +117,14 @@ class VaultService {
 
   async getFavorites() {
     return FavoriteService.getFavorites();
+  }
+
+  // ==========================================
+  // AI & OCR
+  // ==========================================
+
+  async queueOCR(documentId) {
+    return OCRQueue.addJob(documentId);
   }
 }
 

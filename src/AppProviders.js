@@ -11,6 +11,9 @@ import { NotificationProvider } from './context/NotificationContext';
 import { DatabaseProvider } from './database/DatabaseProvider';
 import RootNavigator from './navigation/RootNavigator';
 import { GlobalImportProgress } from './components/import/GlobalImportProgress';
+
+// Initialize AI services
+import './ai';
 import { DuplicateResolutionDialog } from './components/import/DuplicateResolutionDialog';
 import { navigationRef } from './navigation/navigationRef';
 import { fonts } from './constants/fonts';

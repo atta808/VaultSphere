@@ -9,6 +9,7 @@ import { SphereFAB } from '../components/buttons/SphereFAB';
 import { useTheme } from '../hooks/useTheme';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import VaultService from '../services/vault/VaultService';
+import { DocumentIntelligenceCard } from '../components/cards/DocumentIntelligenceCard';
 
 export default function DocumentDetailsScreen() {
   const { spacing, colors } = useTheme();
@@ -97,6 +98,8 @@ export default function DocumentDetailsScreen() {
               description="Add tags to help organize this document."
             />
           </SphereSectionCard>
+
+          <DocumentIntelligenceCard documentId={documentId} />
 
           <View style={{ height: 100 }} />
         </View>
