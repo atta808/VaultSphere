@@ -8,6 +8,7 @@ export const ROUTES = {
   VAULT_STACK: 'VaultStack',
   SEARCH_STACK: 'SearchStack',
   SETTINGS_STACK: 'SettingsStack',
+  SECURITY_STACK: 'SecurityStack',
 
   // Screens
   HOME: 'Home',
@@ -22,4 +23,11 @@ export const ROUTES = {
 
   SETTINGS: 'Settings',
   PROFILE: 'Profile',
+
+  // Security
+  LOCK_SCREEN: 'LockScreen',
+  CREATE_PIN: 'CreatePin',
+  CONFIRM_PIN: 'ConfirmPin',
+  VERIFY_PIN: 'VerifyPin',
+  CHANGE_PIN: 'ChangePin',
 };

@@ -12,14 +12,38 @@ import { ROUTES } from '../config/routes';
 import VaultService from '../services/vault/VaultService';
 import ImportQueue from '../services/import/ImportQueue';
 import { OCRBadge } from '../components/badges/OCRBadge';
+import SecurityService from '../services/security/SecurityService';
 
 export default function VaultScreen() {
   const navigation = useNavigation();
+  const [isAuthenticatedForVault, setIsAuthenticatedForVault] = useState(false);
+  const [isCheckingSecurity, setIsCheckingSecurity] = useState(true);
   const { spacing, colors } = useTheme();
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState('');
   const [documents, setDocuments] = useState([]);
   const [folders, setFolders] = useState([]);
+
+  const checkVaultSecurity = async () => {
+      setIsCheckingSecurity(true);
+      const requiresAuth = await SecurityService.vaultLock.requiresAuthentication();
+      if (requiresAuth) {
+          setIsAuthenticatedForVault(false);
+          navigation.navigate(ROUTES.SECURITY_STACK, {
+              screen: ROUTES.LOCK_SCREEN,
+              params: {
+                  onUnlock: () => {
+                      setIsAuthenticatedForVault(true);
+                      loadVaultData();
+                  }
+              }
+          });
+      } else {
+          setIsAuthenticatedForVault(true);
+          await loadVaultData();
+      }
+      setIsCheckingSecurity(false);
+  };
 
   const loadVaultData = async () => {
     try {
@@ -35,7 +59,7 @@ export default function VaultScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      loadVaultData();
+      checkVaultSecurity();
     }, [])
   );
 
@@ -70,6 +94,12 @@ export default function VaultScreen() {
     await loadVaultData();
     setRefreshing(false);
   }, []);
+
+  if (isCheckingSecurity || !isAuthenticatedForVault) {
+      return (
+          <View style={{ flex: 1, backgroundColor: colors.background }} />
+      );
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
