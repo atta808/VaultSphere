@@ -6,9 +6,31 @@ import { SphereSectionCard } from '../components/cards/SphereSectionCard';
 import { SphereInfoRow } from '../components/common/SphereInfoRow';
 import { EmptyState } from '../components/feedback/EmptyState';
 import { useTheme } from '../hooks/useTheme';
+import { useFocusEffect } from '@react-navigation/native';
+import SecurityService from '../services/security/SecurityService';
 
 export default function ProfileScreen() {
   const { spacing, colors, radius } = useTheme();
+  const [securityStatus, setSecurityStatus] = React.useState('Loading...');
+  const [biometricStatus, setBiometricStatus] = React.useState('Loading...');
+  const [pinStatus, setPinStatus] = React.useState('Loading...');
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadStatuses();
+    }, [])
+  );
+
+  const loadStatuses = async () => {
+      const status = await SecurityService.settings.getSecurityStatus();
+      setSecurityStatus(status);
+
+      const hasPin = await SecurityService.pin.hasPinSetup();
+      setPinStatus(hasPin ? 'Enabled' : 'Disabled');
+
+      const isBioEnabled = await SecurityService.biometrics.isBiometricEnabledByUser();
+      setBiometricStatus(isBioEnabled ? 'Enabled' : 'Disabled');
+  };
 
   return (
     <ScreenContainer scrollable>
@@ -25,6 +47,12 @@ export default function ProfileScreen() {
         <SphereInfoRow label="User ID" value="#8475839" />
         <SphereInfoRow label="Member Since" value="Oct 2023" />
         <SphereInfoRow label="Status" value="Active" showDivider={false} />
+      </SphereSectionCard>
+
+      <SphereSectionCard title="Security Status">
+        <SphereInfoRow label="Overall Status" value={securityStatus} />
+        <SphereInfoRow label="PIN Status" value={pinStatus} />
+        <SphereInfoRow label="Biometric Status" value={biometricStatus} showDivider={false} />
       </SphereSectionCard>
 
       <SphereSectionCard title="Statistics">

@@ -11,6 +11,7 @@ import { NotificationProvider } from './context/NotificationContext';
 import { DatabaseProvider } from './database/DatabaseProvider';
 import RootNavigator from './navigation/RootNavigator';
 import { GlobalImportProgress } from './components/import/GlobalImportProgress';
+import { AuthenticationProvider } from './context/AuthenticationContext';
 
 // Initialize AI services
 import './ai';
@@ -49,15 +50,17 @@ const MainApp = () => {
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <PaperProvider theme={paperTheme}>
-          <VaultProvider>
-            <NotificationProvider>
-              <NavigationContainer ref={navigationRef} theme={navigationTheme}>
-                <RootNavigator />
-                <GlobalImportProgress />
-                <DuplicateResolutionDialog />
-              </NavigationContainer>
-            </NotificationProvider>
-          </VaultProvider>
+          <AuthenticationProvider>
+            <VaultProvider>
+              <NotificationProvider>
+                <NavigationContainer ref={navigationRef} theme={navigationTheme}>
+                  <RootNavigator />
+                  <GlobalImportProgress />
+                  <DuplicateResolutionDialog />
+                </NavigationContainer>
+              </NotificationProvider>
+            </VaultProvider>
+          </AuthenticationProvider>
         </PaperProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
