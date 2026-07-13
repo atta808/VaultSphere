@@ -90,3 +90,53 @@ export class CancelledImportError extends VaultError {
     this.name = 'CancelledImportError';
   }
 }
+
+// Backup & Sync Errors
+export class BackupError extends VaultError {
+  constructor(message) {
+    super(message);
+    this.name = 'BackupError';
+  }
+}
+
+export class RestoreError extends VaultError {
+  constructor(message) {
+    super(message);
+    this.name = 'RestoreError';
+  }
+}
+
+export class SyncError extends VaultError {
+  constructor(message) {
+    super(message);
+    this.name = 'SyncError';
+  }
+}
+
+export class ExportError extends VaultError {
+  constructor(message) {
+    super(message);
+    this.name = 'ExportError';
+  }
+}
+
+export class ImportBackupError extends VaultError {
+  constructor(message) {
+    super(message);
+    this.name = 'ImportBackupError';
+  }
+}
+
+export class ManifestError extends VaultError {
+  constructor(message) {
+    super(message);
+    this.name = 'ManifestError';
+  }
+}
+
+export class ChecksumError extends VaultError {
+  constructor(message) {
+    super(message);
+    this.name = 'ChecksumError';
+  }
+}
