@@ -1,9 +1,11 @@
 import initialSchema from './migrations/001_initial_schema';
+import ocrAiSchema from './migrations/002_ocr_ai_schema';
 import { MigrationError } from './utils/errors';
 
 // Array of all migrations in order
 const migrations = [
   initialSchema,
+  ocrAiSchema,
   // Future migrations will be added here
 ];
 

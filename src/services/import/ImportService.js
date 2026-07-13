@@ -55,6 +55,14 @@ class ImportJob {
          importedDoc = await DocumentService.importDocument(uri, finalName, mimeType, size, this.folderId);
       }
 
+      // 5. Trigger OCR/AI Queue
+      // We import it locally first to avoid circular dependencies in this service,
+      // but optimally we would import it directly.
+      const OCRQueue = require('../../ai/queue/OCRQueue').default;
+      if (OCRQueue) {
+         OCRQueue.addJob(importedDoc.id);
+      }
+
       this.resolve(importedDoc);
     } catch (error) {
       this.reject(error);
