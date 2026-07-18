@@ -1,4 +1,5 @@
 import initialSchema from './migrations/001_initial_schema';
+import { Logger } from '../utils/logger/Logger';
 import ocrAiSchema from './migrations/002_ocr_ai_schema';
 import { MigrationError } from './utils/errors';
 
@@ -28,7 +29,7 @@ export async function runMigrations(db) {
     for (const migration of migrations) {
       if (migration.version > currentVersion) {
         if (__DEV__) {
-          console.log(`Running migration: v${migration.version} - ${migration.description}`);
+          Logger.info(`Running migration: v${migration.version} - ${migration.description}`);
         }
 
         await db.withTransactionAsync(async () => {
@@ -41,7 +42,7 @@ export async function runMigrations(db) {
         });
 
         if (__DEV__) {
-          console.log(`Migration v${migration.version} completed.`);
+          Logger.info(`Migration v${migration.version} completed.`);
         }
       }
     }

@@ -1,4 +1,5 @@
 import OCRService from './OCRService';
+import { Logger } from '../../utils/logger/Logger';
 import AIAnalysisService from './AIAnalysisService';
 import SearchIndexService from './SearchIndexService';
 import DocumentRepository from '../../database/repositories/DocumentRepository';
@@ -64,7 +65,7 @@ class DocumentIntelligenceService {
       return { success: true, text: ocrResult.text, analysis };
 
     } catch (error) {
-      console.error(`DocumentIntelligenceService failed for doc ${documentId}:`, error);
+      Logger.error(`DocumentIntelligenceService failed for doc ${documentId}:`, error);
       throw error;
     }
   }

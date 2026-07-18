@@ -19,13 +19,7 @@ export default function ProfileScreen() {
   const [backupStatus, setBackupStatus] = React.useState('Loading...');
   const [lastBackup, setLastBackup] = React.useState('Loading...');
 
-  useFocusEffect(
-    React.useCallback(() => {
-      loadStatuses();
-    }, [])
-  );
-
-  const loadStatuses = async () => {
+  const loadStatuses = React.useCallback(async () => {
       const status = await SecurityService.settings.getSecurityStatus();
       setSecurityStatus(status);
 
@@ -48,7 +42,13 @@ export default function ProfileScreen() {
           setBackupStatus('Unknown');
           setLastBackup('Unknown');
       }
-  };
+  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadStatuses();
+    }, [loadStatuses])
+  );
 
   return (
     <ScreenContainer scrollable>

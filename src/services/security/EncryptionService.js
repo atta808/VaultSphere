@@ -10,13 +10,9 @@ class EncryptionService {
    * Generates a new encryption key.
    */
   async generateEncryptionKey() {
-    try {
-      // Future: Implement secure random key generation
-      // For now, return a placeholder indicating architecture is ready
-      return 'placeholder-encryption-key';
-    } catch (error) {
-      throw new EncryptionError('Failed to generate encryption key.');
-    }
+    // Future: Implement secure random key generation
+    // For now, return a placeholder indicating architecture is ready
+    return 'placeholder-encryption-key';
   }
 
   /**
@@ -48,7 +44,7 @@ class EncryptionService {
   /**
    * Encrypts metadata (JSON).
    */
-  async encryptMetadata(metadata, key) {
+  async encryptMetadata(metadata, _key) {
     try {
        // Future: Implement metadata encryption
        return JSON.stringify(metadata);
@@ -60,7 +56,7 @@ class EncryptionService {
   /**
    * Decrypts metadata (JSON).
    */
-  async decryptMetadata(encryptedMetadata, key) {
+  async decryptMetadata(encryptedMetadata, _key) {
     try {
       // Future: Implement metadata decryption
       return JSON.parse(encryptedMetadata);
@@ -72,13 +68,9 @@ class EncryptionService {
   /**
    * Key Rotation (Architecture Only)
    */
-  async rotateKeys(oldKey, newKey) {
-     try {
-       // Future: Re-encrypt stored keys or data with the new key
-       return true;
-     } catch (error) {
-       throw new EncryptionError('Failed to rotate encryption keys.');
-     }
+  async rotateKeys(_oldKey, _newKey) {
+     // Future: Re-encrypt stored keys or data with the new key
+     return true;
   }
 }
 

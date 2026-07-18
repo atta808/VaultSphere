@@ -1,4 +1,5 @@
 import DocumentIntelligenceService from '../services/DocumentIntelligenceService';
+import { Logger } from '../../utils/logger/Logger';
 
 class OCRQueue {
   constructor() {
@@ -42,7 +43,7 @@ class OCRQueue {
         try {
           callback(payload);
         } catch (e) {
-          console.error(`Error in event listener for ${event}:`, e);
+          Logger.error(`Error in event listener for ${event}:`, e);
         }
       });
     }
@@ -100,7 +101,7 @@ class OCRQueue {
             await new Promise(res => setTimeout(res, 1000));
         } else {
             this.currentBatch.failed++;
-            console.error(`OCR Job failed for document ${job.documentId}:`, error);
+            Logger.error(`OCR Job failed for document ${job.documentId}:`, error);
             this.emit('OCR_FAILED', { job, error, state: this._getQueueState() });
         }
       }

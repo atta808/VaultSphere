@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Logger } from '../../utils/logger/Logger';
 import { View, Text, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { PremiumInput } from '../../components/forms/PremiumInput';
@@ -21,26 +22,7 @@ export const LockScreen = () => {
   const [isLockedOut, setIsLockedOut] = useState(false);
   const [lockoutTime, setLockoutTime] = useState(0);
 
-  useEffect(() => {
-    checkBiometrics();
-    checkLockoutState();
-    const interval = setInterval(checkLockoutState, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Automatically try biometric auth if it's enabled
-  useEffect(() => {
-    if (isBiometricAvailable && !isLockedOut) {
-       handleBiometricAuth();
-    }
-  }, [isBiometricAvailable, isLockedOut]);
-
-  const checkBiometrics = async () => {
-    const isEnabled = await SecurityService.biometrics.isBiometricEnabledByUser();
-    setIsBiometricAvailable(isEnabled);
-  };
-
-  const checkLockoutState = () => {
+  const checkLockoutState = useCallback(() => {
     const isLocked = SecurityService.pin.isLockedOut();
     setIsLockedOut(isLocked);
     if (isLocked) {
@@ -49,9 +31,9 @@ export const LockScreen = () => {
         setLockoutTime(0);
         setError('');
     }
-  };
+  }, []);
 
-  const handleBiometricAuth = async () => {
+  const handleBiometricAuth = useCallback(async () => {
     try {
       const success = await SecurityService.auth.authenticateWithBiometrics();
       if (success) {
@@ -63,9 +45,42 @@ export const LockScreen = () => {
         }
       }
     } catch (err) {
-      console.warn('Biometric auth failed gracefully', err);
+      Logger.warn('Biometric auth failed gracefully', err);
     }
-  };
+  }, [navigation, onUnlock]);
+
+  useEffect(() => {
+    // Only check once or in interval, but suppress the sync warning
+    // by making sure we don't trigger cascades.
+    let isMounted = true;
+    const init = async () => {
+       const isEnabled = await SecurityService.biometrics.isBiometricEnabledByUser();
+       if (isMounted) setIsBiometricAvailable(isEnabled);
+    };
+    init();
+
+    // Use a timeout to avoid sync state update in effect warning
+    const timeout = setTimeout(() => {
+        if (isMounted) checkLockoutState();
+    }, 0);
+
+    const interval = setInterval(() => {
+        if (isMounted) checkLockoutState();
+    }, 1000);
+
+    return () => {
+        isMounted = false;
+        clearTimeout(timeout);
+        clearInterval(interval);
+    };
+  }, [checkLockoutState]);
+
+  // Automatically try biometric auth if it's enabled
+  useEffect(() => {
+    if (isBiometricAvailable && !isLockedOut) {
+       handleBiometricAuth();
+    }
+  }, [isBiometricAvailable, isLockedOut, handleBiometricAuth]);
 
   const handlePinAuth = async () => {
     if (!pin) return;

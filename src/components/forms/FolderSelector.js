@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Logger } from '../../utils/logger/Logger';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../hooks/useTheme';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,7 +17,7 @@ export const FolderSelector = ({ selectedFolderId, onSelect }) => {
         const flds = await VaultService.getAllFolders();
         setFolders(flds);
       } catch (error) {
-        console.error('Failed to load folders for selector', error);
+        Logger.error('Failed to load folders for selector', error);
       }
     };
     loadFolders();

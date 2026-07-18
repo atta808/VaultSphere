@@ -1,9 +1,6 @@
 import * as DocumentPicker from 'expo-document-picker';
-import * as FileSystem from 'expo-file-system';
 import { ImportBackupError, ValidationError } from '../../utils/errors/customErrors';
 import { DeviceEventEmitter } from 'react-native';
-import { BACKUP_ROOT, getBackupPath, getBackupManifestPath } from '../../utils/backupHelpers';
-import { ensureDirectoryExists } from '../../utils/storageHelpers';
 
 class ImportBackupService {
   emitProgress(event, payload) {

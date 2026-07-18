@@ -1,7 +1,7 @@
-import { documentDirectory, getInfoAsync, makeDirectoryAsync } from 'expo-file-system';
+import * as FileSystem from 'expo-file-system';
 import { normalizePath } from './fileNaming';
 
-export const APP_STORAGE_ROOT = documentDirectory ? normalizePath(`${documentDirectory}VaultSphere`) : normalizePath(`VaultSphere`);
+export const APP_STORAGE_ROOT = FileSystem.documentDirectory ? normalizePath(`${FileSystem.documentDirectory}VaultSphere`) : normalizePath(`VaultSphere`);
 
 export const STORAGE_PATHS = {
   DOCUMENTS: normalizePath(`${APP_STORAGE_ROOT}/documents`),
@@ -18,8 +18,8 @@ export const getTrashPath = (filename) => normalizePath(`${STORAGE_PATHS.TRASH}/
 export const getExportPath = (filename) => normalizePath(`${STORAGE_PATHS.EXPORTS}/${filename}`);
 
 export const ensureDirectoryExists = async (dirPath) => {
-  const dirInfo = await getInfoAsync(dirPath);
+  const dirInfo = await FileSystem.getInfoAsync(dirPath);
   if (!dirInfo.exists) {
-    await makeDirectoryAsync(dirPath, { intermediates: true });
+    await FileSystem.makeDirectoryAsync(dirPath, { intermediates: true });
   }
 };

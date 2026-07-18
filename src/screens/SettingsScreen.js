@@ -1,4 +1,5 @@
 import React, { useState , useCallback } from 'react';
+import { Logger } from '../utils/logger/Logger';
 import { View, Switch } from 'react-native';
 import { useNavigation , useFocusEffect } from '@react-navigation/native';
 import { ScreenContainer } from '../components/layout/ScreenContainer';
@@ -44,7 +45,7 @@ export default function SettingsScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      VaultService.getVaultStatistics().then(setStats).catch(console.error);
+      VaultService.getVaultStatistics().then(setStats).catch(Logger.error);
     }, [])
   );
 
@@ -65,6 +66,37 @@ export default function SettingsScreen() {
   const [biometricsEnabled, setBiometricsEnabled] = useState(false);
   const [biometricAvailable, setBiometricAvailable] = useState(false);
   const [autoLockTimeout, setAutoLockTimeout] = useState(5 * 60 * 1000);
+
+  const loadBackupStats = useCallback(async () => {
+    try {
+        const latest = await LocalStorageProvider.getLatestBackup();
+        const stats = await LocalStorageProvider.getStorageStatistics();
+        setBackupStats({
+           lastBackup: latest?.manifest ? new Date(latest.manifest.createdDate).toLocaleString() : 'Never',
+           backupSize: stats.usedSize,
+           backupStatus: 'Ready',
+           backupProvider: 'Local Storage',
+           backupCount: stats.backupCount,
+           currentPath: latest?.path
+        });
+    } catch (e) {
+        Logger.error('Failed to load backup stats', e);
+    }
+  }, []);
+
+  const loadSecuritySettings = useCallback(async () => {
+    const isAppLock = await SecurityService.settings.isAppLockEnabled();
+    const isVaultLock = await SecurityService.settings.isVaultLockEnabled();
+    const isBioEnabled = await SecurityService.biometrics.isBiometricEnabledByUser();
+    const isBioAvail = await SecurityService.biometrics.checkHardwareAvailability();
+    const timeout = await SecurityService.settings.getAutoLockTimeout();
+
+    setAppLock(isAppLock);
+    setVaultLock(isVaultLock);
+    setBiometricsEnabled(isBioEnabled);
+    setBiometricAvailable(isBioAvail);
+    setAutoLockTimeout(timeout);
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -87,39 +119,8 @@ export default function SettingsScreen() {
         resCompleted.remove();
         resFailed.remove();
       };
-    }, [])
+    }, [loadSecuritySettings, loadBackupStats])
   );
-
-  const loadBackupStats = async () => {
-    try {
-        const latest = await LocalStorageProvider.getLatestBackup();
-        const stats = await LocalStorageProvider.getStorageStatistics();
-        setBackupStats({
-           lastBackup: latest?.manifest ? new Date(latest.manifest.createdDate).toLocaleString() : 'Never',
-           backupSize: stats.usedSize,
-           backupStatus: 'Ready',
-           backupProvider: 'Local Storage',
-           backupCount: stats.backupCount,
-           currentPath: latest?.path
-        });
-    } catch (e) {
-        console.error('Failed to load backup stats', e);
-    }
-  };
-
-  const loadSecuritySettings = async () => {
-    const isAppLock = await SecurityService.settings.isAppLockEnabled();
-    const isVaultLock = await SecurityService.settings.isVaultLockEnabled();
-    const isBioEnabled = await SecurityService.biometrics.isBiometricEnabledByUser();
-    const isBioAvail = await SecurityService.biometrics.checkHardwareAvailability();
-    const timeout = await SecurityService.settings.getAutoLockTimeout();
-
-    setAppLock(isAppLock);
-    setVaultLock(isVaultLock);
-    setBiometricsEnabled(isBioEnabled);
-    setBiometricAvailable(isBioAvail);
-    setAutoLockTimeout(timeout);
-  };
 
   const handleToggleAppLock = async (val) => {
       if (val && !hasPinSetup) {

@@ -1,10 +1,11 @@
 import * as FileSystem from 'expo-file-system';
+import { Logger } from '../../utils/logger/Logger';
 import DatabaseService from '../../database/services/DatabaseService';
 import BackupManifest from './BackupManifest';
 import BackupValidator from './BackupValidator';
-import { BACKUP_ROOT, getBackupPath, getBackupDatabasePath, getBackupDocumentsPath, getBackupThumbnailsPath, getBackupMetadataPath, getBackupManifestPath } from '../../utils/backupHelpers';
+import { getBackupPath, getBackupDatabasePath, getBackupDocumentsPath, getBackupThumbnailsPath, getBackupMetadataPath, getBackupManifestPath } from '../../utils/backupHelpers';
 import { ensureDirectoryExists, STORAGE_PATHS } from '../../utils/storageHelpers';
-import { generateFileChecksum } from '../../utils/checksumHelpers';
+
 import { BackupError } from '../../utils/errors/customErrors';
 import DocumentService from '../vault/DocumentService';
 import FolderService from '../vault/FolderService';
@@ -111,7 +112,7 @@ class BackupService {
     } catch (error) {
       // Ensure DB is re-opened on error
       if (!DatabaseService.getDatabase()) {
-         try { await DatabaseService.initialize(); } catch(e) { console.error('Failed to reopen DB after backup failure', e); }
+         try { await DatabaseService.initialize(); } catch(e) { Logger.error('Failed to reopen DB after backup failure', e); }
       }
       this.emitProgress('BACKUP_FAILED', { error: error.message });
       throw new BackupError(`Backup failed: ${error.message}`);
@@ -130,7 +131,7 @@ class BackupService {
            await FileSystem.copyAsync({ from: sourcePath, to: targetPath });
        }
     } catch (e) {
-       console.warn(`Failed to copy directory contents from ${sourceDir}:`, e);
+       Logger.warn(`Failed to copy directory contents from ${sourceDir}:`, e);
     }
   }
 

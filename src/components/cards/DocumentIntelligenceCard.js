@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Logger } from '../../utils/logger/Logger';
 import { SphereSectionCard } from './SphereSectionCard';
 import { SphereInfoRow } from '../common/SphereInfoRow';
 import { EmptyState } from '../feedback/EmptyState';
@@ -29,7 +30,7 @@ export function DocumentIntelligenceCard({ documentId }) {
         ]);
         setData({ ocr, analysis, summary, keywords, entities });
       } catch (err) {
-        console.error('Failed to load AI data', err);
+        Logger.error('Failed to load AI data', err);
       }
     }
     if (documentId) loadAI();

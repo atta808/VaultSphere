@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { Logger } from '../utils/logger/Logger';
 import DatabaseService from './services/DatabaseService';
 
 const DatabaseContext = createContext({
@@ -16,10 +17,10 @@ export function DatabaseProvider({ children }) {
   const [databaseReady, setDatabaseReady] = useState(false);
   const [error, setError] = useState(null);
 
-  const initializeDatabase = async () => {
+  const initializeDatabase = useCallback(async (isMounted = { current: true }) => {
     try {
-      setLoading(true);
-      setError(null);
+      if (isMounted.current) setLoading(true);
+      if (isMounted.current) setError(null);
 
       await DatabaseService.initialize();
 
@@ -27,25 +28,34 @@ export function DatabaseProvider({ children }) {
       const StorageService = require('../services/vault/StorageService').default;
       await StorageService.initialize();
 
-      setDatabaseReady(true);
+      if (isMounted.current) setDatabaseReady(true);
     } catch (e) {
-      console.error('Failed to initialize DatabaseProvider:', e);
-      setError(e);
-      setDatabaseReady(false);
+      Logger.error('Failed to initialize DatabaseProvider:', e);
+      if (isMounted.current) {
+          setError(e);
+          setDatabaseReady(false);
+      }
     } finally {
-      setLoading(false);
+      if (isMounted.current) setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    initializeDatabase();
+    const isMounted = { current: true };
+
+    // Use a timeout to avoid sync state update in effect warning
+    const timeout = setTimeout(() => {
+        initializeDatabase(isMounted);
+    }, 0);
 
     return () => {
+      isMounted.current = false;
+      clearTimeout(timeout);
       // Optional cleanup on unmount
       // Note: In typical apps, we might not want to close DB on root provider unmount
       // but if needed: DatabaseService.close();
     };
-  }, []);
+  }, [initializeDatabase]);
 
   return (
     <DatabaseContext.Provider
