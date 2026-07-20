@@ -2,32 +2,50 @@ import DatabaseService from '../database/services/DatabaseService';
 import { Logger } from '../utils/logger/Logger';
 
 class SearchService {
-  async search(query) {
-    if (!query) return [];
+  /**
+   * Perform a full-text search using the FTS5 virtual table.
+   * Ranks by bm25 relevance.
+   */
+  async search(query, limit = 50) {
+    if (!query || query.trim() === '') return [];
 
     const db = DatabaseService.getDatabase();
     if (!db) return [];
 
-    // Combine standard document search (by name) with the new search_index.
-    // The search_index already stores filename, so we can primarily query it,
-    // but joining with documents ensures we only return undeleted files.
+    // Simple wildcard for prefix matching in FTS5
+    // Split the query by spaces, append * to each term for prefix matching.
+    const ftsQuery = query
+      .trim()
+      .split(/\s+/)
+      .map(term => `"${term}"*`)
+      .join(' AND ');
 
-    const searchTerm = `%${query}%`;
+    // FTS5 bm25 weights (filename, ocr, ai_keywords, ai_entities, ai_summary, tags, notes, metadata)
+    // 0 is documentId (UNINDEXED)
+    // 1: filename (highest priority)
+    // 2: ocr
+    // 3: ai_keywords
+    // 4: ai_entities
+    // 5: ai_summary
+    // 6: tags
+    // 7: notes
+    // 8: metadata (lowest)
+
     const sql = `
-      SELECT DISTINCT d.id, d.uuid, d.folderId, d.categoryId, d.name, d.originalName, d.extension, d.mimeType, d.size, d.path, d.thumbnail, d.favorite, d.encrypted, d.createdAt, d.updatedAt
+      SELECT d.*
       FROM documents d
-      LEFT JOIN search_index si ON d.id = si.documentId
+      JOIN search_index_fts s ON d.id = s.documentId
       WHERE d.deletedAt IS NULL
-        AND (d.name LIKE ? OR d.originalName LIKE ? OR si.content LIKE ?)
-      ORDER BY d.updatedAt DESC
-      LIMIT 20
+        AND search_index_fts MATCH ?
+      ORDER BY bm25(search_index_fts, 0, 10.0, 7.0, 5.0, 4.0, 3.0, 2.0, 1.0, 0.5)
+      LIMIT ?
     `;
 
     try {
-      const results = await db.getAllAsync(sql, [searchTerm, searchTerm, searchTerm]);
+      const results = await db.getAllAsync(sql, [ftsQuery, limit]);
       return results;
     } catch (e) {
-      Logger.error('Search query failed:', e);
+      Logger.error('SearchService: Search query failed:', e);
       return [];
     }
   }

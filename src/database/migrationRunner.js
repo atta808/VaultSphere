@@ -1,12 +1,14 @@
 import initialSchema from './migrations/001_initial_schema';
 import { Logger } from '../utils/logger/Logger';
 import ocrAiSchema from './migrations/002_ocr_ai_schema';
+import searchHistorySchema from './migrations/003_search_history_schema';
 import { MigrationError } from './utils/errors';
 
 // Array of all migrations in order
 const migrations = [
   initialSchema,
   ocrAiSchema,
+  searchHistorySchema,
   // Future migrations will be added here
 ];
 
