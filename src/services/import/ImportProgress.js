@@ -1,4 +1,5 @@
 import ImportQueue from './ImportQueue';
+import { Logger } from '../../utils/logger/Logger';
 
 class ImportProgress {
   constructor() {
@@ -35,7 +36,7 @@ class ImportProgress {
       });
     });
 
-    ImportQueue.on('IMPORT_PROGRESS', ({ job, progress, state }) => {
+    ImportQueue.on('IMPORT_PROGRESS', ({ job, progress, _state }) => {
       // Future-proof for chunked uploads
       if (this.state.currentJob?.id === job.id) {
          this.state.currentJob.progress = progress;
@@ -51,7 +52,7 @@ class ImportProgress {
       });
     });
 
-    ImportQueue.on('IMPORT_COMPLETED', ({ job, state }) => {
+    ImportQueue.on('IMPORT_COMPLETED', ({ _job, state }) => {
       this._updateState({
         currentJob: null,
         duplicateContext: null,
@@ -59,7 +60,7 @@ class ImportProgress {
       });
     });
 
-    ImportQueue.on('IMPORT_FAILED', ({ job, state }) => {
+    ImportQueue.on('IMPORT_FAILED', ({ _job, state }) => {
       this._updateState({
         currentJob: null,
         duplicateContext: null,
@@ -98,7 +99,7 @@ class ImportProgress {
       try {
         listener(this.state);
       } catch (e) {
-         console.error('Error in ImportProgress listener:', e);
+         Logger.error('Error in ImportProgress listener:', e);
       }
     }
   }

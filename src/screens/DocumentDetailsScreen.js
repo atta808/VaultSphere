@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Logger } from '../utils/logger/Logger';
 import { View, Alert } from 'react-native';
 import { ScreenContainer } from '../components/layout/ScreenContainer';
 import { SpherePageHeader } from '../components/headers/SpherePageHeader';
@@ -21,7 +22,7 @@ export default function DocumentDetailsScreen() {
 
   useEffect(() => {
     if (documentId) {
-      VaultService.getDocument(documentId).then(setDocument).catch(console.error);
+      VaultService.getDocument(documentId).then(setDocument).catch(Logger.error);
     }
   }, [documentId]);
 

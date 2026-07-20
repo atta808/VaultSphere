@@ -35,7 +35,7 @@ class LocalStorageProvider {
     }
   }
 
-  async saveBackupPackage(backupSourcePath, backupId) {
+  async saveBackupPackage(backupSourcePath, _backupId) {
     await this.initialize();
 
     // In LocalStorageProvider, the backup is already saved by BackupService

@@ -43,7 +43,6 @@ class SecuritySettingsService {
   async getSecurityStatus() {
      const appLock = await this.isAppLockEnabled();
      const vaultLock = await this.isVaultLockEnabled();
-     const autoLock = await this.getAutoLockTimeout();
 
      if (appLock) return 'Maximum';
      if (vaultLock) return 'Protected';

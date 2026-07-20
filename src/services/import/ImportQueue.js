@@ -1,3 +1,4 @@
+import { Logger } from '../../utils/logger/Logger';
 class ImportQueue {
   constructor() {
     if (ImportQueue.instance) {
@@ -41,7 +42,7 @@ class ImportQueue {
         try {
           callback(payload);
         } catch (e) {
-          console.error(`Error in event listener for ${event}:`, e);
+          Logger.error(`Error in event listener for ${event}:`, e);
         }
       });
     }
@@ -92,7 +93,7 @@ class ImportQueue {
            this.emit('IMPORT_CANCELLED', { job, state: this._getQueueState() });
         } else {
           this.currentBatch.failed++;
-          console.error(`Job failed: ${job.file.name}`, error);
+          Logger.error(`Job failed: ${job.file.name}`, error);
           this.emit('IMPORT_FAILED', { job, error, state: this._getQueueState() });
         }
       }

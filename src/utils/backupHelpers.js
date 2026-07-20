@@ -1,7 +1,7 @@
-import { documentDirectory } from 'expo-file-system';
+import * as FileSystem from 'expo-file-system';
 import { normalizePath } from './fileNaming';
 
-export const BACKUP_ROOT = documentDirectory ? normalizePath(`${documentDirectory}VaultSphere/backups`) : normalizePath(`VaultSphere/backups`);
+export const BACKUP_ROOT = FileSystem.documentDirectory ? normalizePath(`${FileSystem.documentDirectory}VaultSphere/backups`) : normalizePath(`VaultSphere/backups`);
 
 export const getBackupPath = (backupId) => normalizePath(`${BACKUP_ROOT}/Backup_${backupId}`);
 

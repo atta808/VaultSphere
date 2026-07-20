@@ -1,4 +1,5 @@
 import * as FileSystem from 'expo-file-system';
+import { Logger } from '../../utils/logger/Logger';
 import DatabaseService from '../../database/services/DatabaseService';
 import BackupValidator from './BackupValidator';
 import { getBackupDatabasePath, getBackupDocumentsPath, getBackupThumbnailsPath, getBackupManifestPath } from '../../utils/backupHelpers';
@@ -92,7 +93,7 @@ class RestoreService {
 
     } catch (error) {
       if (dbClosed && !DatabaseService.getDatabase()) {
-         try { await DatabaseService.initialize(); } catch(e) { console.error('Failed to reopen DB after restore failure', e); }
+         try { await DatabaseService.initialize(); } catch(e) { Logger.error('Failed to reopen DB after restore failure', e); }
       }
       this.emitProgress('RESTORE_FAILED', { error: error.message });
       throw new RestoreError(`Restore failed: ${error.message}`);

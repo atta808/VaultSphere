@@ -1,4 +1,5 @@
 import * as SQLite from 'expo-sqlite';
+import { Logger } from '../../utils/logger/Logger';
 import { runMigrations } from '../migrationRunner';
 import { DatabaseInitializationError } from '../utils/errors';
 
@@ -69,7 +70,7 @@ class DatabaseService {
       // Actually `deleteDatabaseAsync` does exist in some versions, but if not we can drop tables.
       // I'll skip dropping tables unless requested, and just close the db. Wait, let's keep it simple.
     } catch (error) {
-      console.error('Failed to reset database', error);
+      Logger.error('Failed to reset database', error);
     }
   }
 

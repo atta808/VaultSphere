@@ -1,4 +1,5 @@
 import PinService from './PinService';
+import { Logger } from '../../utils/logger/Logger';
 import BiometricService from './BiometricService';
 import { AuthenticationError } from '../../utils/errors/SecurityErrors';
 
@@ -27,7 +28,7 @@ class AuthenticationService {
     } catch (error) {
        // Log internally if needed, but return false to trigger PIN fallback gracefully
        // unless it's a critical error. For now, graceful fallback.
-       console.warn('Biometric auth error/fallback:', error.message);
+       Logger.warn('Biometric auth error/fallback:', error.message);
        return false;
     }
   }

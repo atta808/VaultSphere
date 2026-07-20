@@ -1,4 +1,5 @@
 import * as Crypto from 'expo-crypto';
+import { Logger } from '../utils/logger/Logger';
 import * as FileSystem from 'expo-file-system';
 
 /**
@@ -33,7 +34,7 @@ export const generateFileChecksum = async (filePath) => {
     const fileMetaString = `${fileInfo.size}_${fileInfo.modificationTime || 'none'}`;
     return await generateStringChecksum(fileMetaString);
   } catch (error) {
-    console.error(`Error generating checksum for ${filePath}:`, error);
+    Logger.error(`Error generating checksum for ${filePath}:`, error);
     return null;
   }
 };

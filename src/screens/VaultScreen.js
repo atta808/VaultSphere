@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { Logger } from '../utils/logger/Logger';
 import { RefreshControl, View, Text, TouchableOpacity } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { ScreenContainer } from '../components/layout/ScreenContainer';
@@ -24,7 +25,19 @@ export default function VaultScreen() {
   const [documents, setDocuments] = useState([]);
   const [folders, setFolders] = useState([]);
 
-  const checkVaultSecurity = async () => {
+  const loadVaultData = useCallback(async () => {
+    try {
+      const docs = await VaultService.getAllDocuments();
+      const flds = await VaultService.getAllFolders();
+      // Filter out deleted docs
+      setDocuments(docs.filter(d => !d.deletedAt));
+      setFolders(flds);
+    } catch (e) {
+      Logger.error(e);
+    }
+  }, []);
+
+  const checkVaultSecurity = useCallback(async () => {
       setIsCheckingSecurity(true);
       const requiresAuth = await SecurityService.vaultLock.requiresAuthentication();
       if (requiresAuth) {
@@ -43,24 +56,12 @@ export default function VaultScreen() {
           await loadVaultData();
       }
       setIsCheckingSecurity(false);
-  };
-
-  const loadVaultData = async () => {
-    try {
-      const docs = await VaultService.getAllDocuments();
-      const flds = await VaultService.getAllFolders();
-      // Filter out deleted docs
-      setDocuments(docs.filter(d => !d.deletedAt));
-      setFolders(flds);
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  }, [navigation, loadVaultData]);
 
   useFocusEffect(
     useCallback(() => {
       checkVaultSecurity();
-    }, [])
+    }, [checkVaultSecurity])
   );
 
   // Listen to queue completion to automatically refresh
@@ -87,13 +88,13 @@ export default function VaultScreen() {
        unsubscribe1();
        unsubscribe2();
     };
-  }, [navigation]);
+  }, [navigation, loadVaultData]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await loadVaultData();
     setRefreshing(false);
-  }, []);
+  }, [loadVaultData]);
 
   if (isCheckingSecurity || !isAuthenticatedForVault) {
       return (

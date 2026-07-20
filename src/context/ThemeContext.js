@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useCallback, useMemo } from 'react';
+import { Logger } from '../utils/logger/Logger';
 import { useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { lightPalette, darkPalette, spacing, radius, typography, elevation, shadows } from '../theme';
@@ -31,7 +32,7 @@ export const ThemeProvider = ({ children }) => {
           setThemePreference(savedTheme);
         }
       } catch (error) {
-        console.error('Failed to load theme preference', error);
+        Logger.error('Failed to load theme preference', error);
       } finally {
         setIsReady(true);
       }
@@ -44,7 +45,7 @@ export const ThemeProvider = ({ children }) => {
       setThemePreference(newTheme);
       await AsyncStorage.setItem(THEME_STORAGE_KEY, newTheme);
     } catch (error) {
-      console.error('Failed to save theme preference', error);
+      Logger.error('Failed to save theme preference', error);
     }
   }, []);
 

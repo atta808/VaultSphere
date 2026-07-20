@@ -19,7 +19,7 @@ class ImportJob {
     this.resolvedName = null;
   }
 
-  async execute(queueInstance) {
+  async execute(_queueInstance) {
     try {
       const { uri, name, mimeType, size } = this.file;
 

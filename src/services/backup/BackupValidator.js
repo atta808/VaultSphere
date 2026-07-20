@@ -1,7 +1,6 @@
 import { readManifest } from '../../utils/manifestHelpers';
 import { generateStringChecksum } from '../../utils/checksumHelpers';
 import { ManifestError, ChecksumError, ValidationError } from '../../utils/errors/customErrors';
-import Constants from 'expo-constants';
 
 class BackupValidator {
   async validateManifest(manifestPath) {

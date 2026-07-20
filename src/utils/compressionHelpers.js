@@ -7,14 +7,14 @@
  * Future phases can implement real ZIP compression via a plugin or external service.
  */
 
-export const compressBackup = async (sourcePath, destinationPath) => {
+export const compressBackup = async (sourcePath, _destinationPath) => {
   // Stub for future zip implementation.
   // Currently, the "backup package" is just a directory.
   // In a real zip implementation, we would zip `sourcePath` to `destinationPath`.
   return sourcePath;
 };
 
-export const decompressBackup = async (sourcePath, destinationPath) => {
+export const decompressBackup = async (sourcePath, _destinationPath) => {
   // Stub for future unzip implementation.
   return sourcePath;
 };

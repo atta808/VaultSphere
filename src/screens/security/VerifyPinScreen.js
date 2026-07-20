@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { PremiumInput } from '../../components/forms/PremiumInput';
@@ -22,13 +22,7 @@ export const VerifyPinScreen = () => {
   const [isLockedOut, setIsLockedOut] = useState(false);
   const [lockoutTime, setLockoutTime] = useState(0);
 
-  useEffect(() => {
-    checkLockoutState();
-    const interval = setInterval(checkLockoutState, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const checkLockoutState = () => {
+  const checkLockoutState = useCallback(() => {
     const isLocked = SecurityService.pin.isLockedOut();
     setIsLockedOut(isLocked);
     if (isLocked) {
@@ -37,7 +31,26 @@ export const VerifyPinScreen = () => {
         setLockoutTime(0);
         setError('');
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    // Use a timeout to avoid sync state update in effect warning
+    const timeout = setTimeout(() => {
+        if (isMounted) checkLockoutState();
+    }, 0);
+
+    const interval = setInterval(() => {
+        if (isMounted) checkLockoutState();
+    }, 1000);
+
+    return () => {
+        isMounted = false;
+        clearTimeout(timeout);
+        clearInterval(interval);
+    };
+  }, [checkLockoutState]);
 
   const handleVerify = async () => {
     if (!pin) return;

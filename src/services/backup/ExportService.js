@@ -1,5 +1,4 @@
 import * as Sharing from 'expo-sharing';
-import * as FileSystem from 'expo-file-system';
 import { ExportError } from '../../utils/errors/customErrors';
 import { DeviceEventEmitter } from 'react-native';
 

@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { Logger } from '../utils/logger/Logger';
 import { RefreshControl, Text, TouchableOpacity } from 'react-native';
 import { ScreenContainer } from '../components/layout/ScreenContainer';
 import { SpherePageHeader } from '../components/headers/SpherePageHeader';
@@ -20,7 +21,7 @@ export default function FavoritesScreen() {
       const favs = await VaultService.getFavorites();
       setFavorites(favs);
     } catch (e) {
-      console.error(e);
+      Logger.error(e);
     }
   };
 

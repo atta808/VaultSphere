@@ -1,4 +1,5 @@
 import DatabaseService from '../database/services/DatabaseService';
+import { Logger } from '../utils/logger/Logger';
 
 class SearchService {
   async search(query) {
@@ -26,7 +27,7 @@ class SearchService {
       const results = await db.getAllAsync(sql, [searchTerm, searchTerm, searchTerm]);
       return results;
     } catch (e) {
-      console.error('Search query failed:', e);
+      Logger.error('Search query failed:', e);
       return [];
     }
   }
