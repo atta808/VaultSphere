@@ -11,6 +11,7 @@ import { useTheme } from '../hooks/useTheme';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import VaultService from '../services/vault/VaultService';
 import { DocumentIntelligenceCard } from '../components/cards/DocumentIntelligenceCard';
+import { ROUTES } from '../config/routes';
 
 export default function DocumentDetailsScreen() {
   const { spacing, colors } = useTheme();
@@ -80,7 +81,7 @@ export default function DocumentDetailsScreen() {
           <EmptyState
             iconName="document-text"
             title="Document Preview"
-            description="Preview is not available for this placeholder."
+            description="Tap 'View' below to open the viewer."
           />
         </View>
 
@@ -107,6 +108,11 @@ export default function DocumentDetailsScreen() {
       </ScreenContainer>
 
       <View style={{ position: 'absolute', bottom: spacing[24], right: spacing[24], flexDirection: 'row', gap: spacing[16] }}>
+        <SphereFAB
+          icon="eye"
+          mini
+          onPress={() => navigation.navigate(ROUTES.DOCUMENT_VIEWER, { documentId })}
+        />
         <SphereFAB
           icon={document.favorite ? "star" : "star-outline"}
           mini

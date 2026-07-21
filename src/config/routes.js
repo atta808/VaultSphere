@@ -17,6 +17,7 @@ export const ROUTES = {
 
   VAULT: 'Vault',
   DOCUMENT_DETAILS: 'DocumentDetails',
+  DOCUMENT_VIEWER: 'DocumentViewer',
   ADD_DOCUMENT: 'AddDocument',
 
   SEARCH: 'Search',
