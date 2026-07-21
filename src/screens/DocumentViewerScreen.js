@@ -225,6 +225,7 @@ const DocumentViewerScreen = () => {
           onToggleAnnotations={() => { setShowAnnotations(!showAnnotations); setShowBookmarks(false); setShowThumbnails(false); }}
           onToggleThumbnails={() => { setShowThumbnails(!showThumbnails); setShowBookmarks(false); setShowAnnotations(false); }}
           onSearch={() => setShowSearch(true)}
+          onAIWorkspace={() => navigation.navigate('MainTabs', { screen: 'AIWorkspaceStack', params: { screen: 'AIWorkspace', params: { contextDocumentId: documentId } } })}
         />
       )}
 

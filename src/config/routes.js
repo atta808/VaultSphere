@@ -7,6 +7,7 @@ export const ROUTES = {
   HOME_STACK: 'HomeStack',
   VAULT_STACK: 'VaultStack',
   SEARCH_STACK: 'SearchStack',
+  AI_WORKSPACE_STACK: 'AIWorkspaceStack',
   SETTINGS_STACK: 'SettingsStack',
   SECURITY_STACK: 'SecurityStack',
 
@@ -21,6 +22,9 @@ export const ROUTES = {
   ADD_DOCUMENT: 'AddDocument',
 
   SEARCH: 'Search',
+
+  AI_WORKSPACE: 'AIWorkspace',
+  COMPARISON_SCREEN: 'ComparisonScreen',
 
   SETTINGS: 'Settings',
   PROFILE: 'Profile',

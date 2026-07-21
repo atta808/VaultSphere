@@ -9,7 +9,8 @@ const ViewerToolbar = ({
   onToggleBookmarks,
   onToggleAnnotations,
   onToggleThumbnails,
-  onSearch
+  onSearch,
+  onAIWorkspace,
 }) => {
   const { colors } = useTheme();
 
@@ -23,6 +24,11 @@ const ViewerToolbar = ({
 
       {/* Optional Title can go here, but usually icons take precedence in viewers */}
       <View style={styles.rightGroup}>
+        {onAIWorkspace && (
+          <TouchableOpacity style={styles.iconButton} onPress={onAIWorkspace}>
+            <MaterialCommunityIcons name="auto-fix" size={24} color={colors.primary} />
+          </TouchableOpacity>
+        )}
         <TouchableOpacity style={styles.iconButton} onPress={onSearch}>
           <MaterialCommunityIcons name="magnify" size={24} color={colors.text} />
         </TouchableOpacity>
