@@ -9,7 +9,11 @@ import AnnotationService from '../services/viewer/AnnotationService';
 import RecentPositionService from '../services/viewer/RecentPositionService';
 import ViewerPreferenceService from '../services/viewer/ViewerPreferenceService';
 import ThumbnailService from '../services/viewer/ThumbnailService';
+import DocumentSessionService from '../services/viewer/DocumentSessionService';
+import RecentPageService from '../services/viewer/RecentPageService';
 import DocumentRepository from '../database/repositories/DocumentRepository';
+import VaultLockService from '../services/security/VaultLockService';
+import { DeviceEventEmitter } from 'react-native';
 
 // UI
 import ViewerToolbar from '../components/viewer/ui/ViewerToolbar';
@@ -18,6 +22,9 @@ import BookmarkPanel from '../components/viewer/ui/BookmarkPanel';
 import ThumbnailSidebar from '../components/viewer/ui/ThumbnailSidebar';
 import SearchInDocumentBar from '../components/viewer/ui/SearchInDocumentBar';
 import ReadingProgressIndicator from '../components/viewer/ui/ReadingProgressIndicator';
+import AnnotationToolbar from '../components/viewer/ui/AnnotationToolbar';
+import ViewerAIToolbar from '../components/viewer/ui/ViewerAIToolbar';
+import TextSelectionContextMenu from '../components/viewer/ui/TextSelectionContextMenu';
 
 // Renderers
 import PDFRenderer from '../components/viewer/renderers/PDFRenderer';
@@ -48,6 +55,14 @@ const DocumentViewerScreen = () => {
   const [showAnnotations, setShowAnnotations] = useState(false);
   const [showThumbnails, setShowThumbnails] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+
+  // Tools
+  const [activeAnnotationTool, setActiveAnnotationTool] = useState(null);
+  const [selectedColor, setSelectedColor] = useState('#ffeb3b');
+
+  // AI Menu
+  const [aiMenuVisible, setAiMenuVisible] = useState(false);
+  const [aiMenuPosition, setAiMenuPosition] = useState({ x: 0, y: 0 });
 
   // Data
   const [bookmarks, setBookmarks] = useState([]);
@@ -86,10 +101,12 @@ const DocumentViewerScreen = () => {
 
   const saveReadingPosition = async () => {
     if (documentId) {
+      const sessionDuration = DocumentSessionService.endSession();
       await RecentPositionService.savePosition(documentId, {
         pageNumber: currentPage,
         zoomLevel,
-        scrollY: scrollPosition
+        scrollY: scrollPosition,
+        sessionDuration // This gets added to existing duration
       });
     }
   };
@@ -129,15 +146,35 @@ const DocumentViewerScreen = () => {
     };
 
     navigation.setOptions({ headerShown: false });
+    DocumentSessionService.startSession(documentId);
     loadDocument();
+
+    // Listen for Vault Lock events
+    const lockListener = DeviceEventEmitter.addListener('VAULT_LOCKED', async () => {
+      // Clean up session and exit viewer when vault locks
+      await saveReadingPosition();
+      if (preparedDoc) {
+        await DocumentViewerService.cleanupDocument(preparedDoc.uri);
+      }
+      navigation.navigate('VaultLockedScreen'); // Assuming this route exists based on global state
+    });
+
     return () => {
       // Cleanup on unmount
+      lockListener.remove();
       saveReadingPosition();
       if (preparedDoc) {
         DocumentViewerService.cleanupDocument(preparedDoc.uri);
       }
     };
-  }, [documentId, navigation, currentPage, zoomLevel, scrollPosition, preparedDoc]);
+  }, [documentId, navigation, preparedDoc]); // Removed page dependencies for onmount tracking
+
+  // Log recent page access when page changes
+  useEffect(() => {
+    if (documentId && currentPage) {
+      RecentPageService.logPageAccess(documentId, currentPage);
+    }
+  }, [documentId, currentPage]);
 
   // Handlers
   const handleAddBookmark = async (title) => {
@@ -173,6 +210,8 @@ const DocumentViewerScreen = () => {
           <ImageRenderer
             uri={preparedDoc.uri}
             onZoomChange={setZoomLevel}
+            annotations={annotations}
+            onSelectAnnotation={(a) => console.log('Selected annotation', a)}
           />
         );
       case 'text':
@@ -190,6 +229,8 @@ const DocumentViewerScreen = () => {
             currentPage={currentPage}
             setTotalPages={setTotalPages}
             onPageChange={setCurrentPage}
+            annotations={annotations}
+            onSelectAnnotation={(a) => console.log('Selected annotation', a)}
           />
         );
       default:
@@ -257,11 +298,38 @@ const DocumentViewerScreen = () => {
       {showAnnotations && (
         <AnnotationPanel
           annotations={annotations}
-          onClose={() => setShowAnnotations(false)}
-          onAddAnnotation={handleAddAnnotation}
+          onClose={() => {
+            setShowAnnotations(false);
+            setActiveAnnotationTool(null);
+          }}
+          onAddAnnotation={(type) => {
+            setActiveAnnotationTool(type);
+          }}
           onSelectAnnotation={(a) => { setCurrentPage(a.pageNumber); setShowAnnotations(false); }}
         />
       )}
+
+      {/* Render Annotation Toolbar when a tool is active */}
+      {showAnnotations && activeAnnotationTool && (
+        <AnnotationToolbar
+          activeTool={activeAnnotationTool}
+          onSelectTool={setActiveAnnotationTool}
+          selectedColor={selectedColor}
+          onSelectColor={setSelectedColor}
+        />
+      )}
+
+      {/* AI Context Menu mock integration (could be triggered by long press) */}
+      <TextSelectionContextMenu
+        visible={aiMenuVisible}
+        position={aiMenuPosition}
+        onAction={(action) => console.log('AI Action', action)}
+        onClose={() => setAiMenuVisible(false)}
+      />
+
+      {/* Quick AI Toolbar - Always visible or toggleable */}
+      <ViewerAIToolbar onAction={(action) => console.log('Quick AI Action', action)} />
+
     </View>
   );
 };

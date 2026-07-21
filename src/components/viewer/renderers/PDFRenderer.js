@@ -2,12 +2,13 @@ import React, { useRef, useState, useEffect } from 'react';
 import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
 import Pdf from 'react-native-pdf';
 import { useTheme } from '../../../hooks/useTheme';
+import AnnotationOverlay from '../ui/AnnotationOverlay';
 
 /**
  * Robust PDF Renderer using react-native-pdf.
  * Provides scrolling, zoom, and page navigation.
  */
-const PDFRenderer = ({ uri, onPageChange, currentPage, setTotalPages }) => {
+const PDFRenderer = ({ uri, onPageChange, currentPage, setTotalPages, annotations = [], onSelectAnnotation }) => {
   const { colors, typography } = useTheme();
   const pdfRef = useRef(null);
   const [loading, setLoading] = useState(true);
@@ -20,10 +21,20 @@ const PDFRenderer = ({ uri, onPageChange, currentPage, setTotalPages }) => {
     }
   }, [currentPage]);
 
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const source = { uri, cache: true };
 
+  // Filter annotations for current page
+  const pageAnnotations = annotations.filter(a => a.pageNumber === currentPage);
+
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View
+      style={[styles.container, { backgroundColor: colors.background }]}
+      onLayout={(e) => {
+        const { width, height } = e.nativeEvent.layout;
+        setDimensions({ width, height });
+      }}
+    >
       <Pdf
         ref={pdfRef}
         source={source}
@@ -43,6 +54,18 @@ const PDFRenderer = ({ uri, onPageChange, currentPage, setTotalPages }) => {
         enablePinchZoom={true}
         spacing={10}
       />
+
+      {/* Render Annotation Overlay if dimensions are known */}
+      {dimensions.width > 0 && pageAnnotations.length > 0 && (
+        <View style={StyleSheet.absoluteFillObject} pointerEvents="box-none">
+          <AnnotationOverlay
+            annotations={pageAnnotations}
+            width={dimensions.width}
+            height={dimensions.height}
+            onSelectAnnotation={onSelectAnnotation}
+          />
+        </View>
+      )}
 
       {loading && (
          <View style={[StyleSheet.absoluteFillObject, styles.center, { backgroundColor: colors.background }]}>

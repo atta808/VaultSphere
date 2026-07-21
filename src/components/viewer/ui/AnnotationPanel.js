@@ -6,26 +6,36 @@ import { useTheme } from '../../../hooks/useTheme';
 const AnnotationPanel = ({ annotations, onClose, onSelectAnnotation, onAddAnnotation }) => {
   const { colors, typography } = useTheme();
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={[styles.item, { borderBottomColor: colors.border }]}
-      onPress={() => onSelectAnnotation(item)}
-    >
-      <MaterialCommunityIcons
-        name={item.type === 'highlight' ? 'format-color-highlight' : 'note-text-outline'}
-        size={20}
-        color={colors.primary}
-      />
-      <View style={styles.itemContent}>
-        <Text style={[typography.body, { color: colors.text }]} numberOfLines={1}>
-          {item.content || `${item.type} on page ${item.pageNumber}`}
-        </Text>
-        <Text style={[typography.caption, { color: colors.textSecondary }]}>
-          Page {item.pageNumber}
-        </Text>
-      </View>
-    </TouchableOpacity>
-  );
+  const renderItem = ({ item }) => {
+    let iconName = 'note-text-outline';
+    if (item.type === 'highlight') iconName = 'format-color-highlight';
+    else if (item.type === 'underline') iconName = 'format-underline';
+    else if (item.type === 'strike-through') iconName = 'format-strikethrough-variant';
+    else if (item.type === 'freehand' || item.type === 'drawing') iconName = 'draw';
+    else if (item.type === 'rectangle') iconName = 'shape-rectangle-plus';
+    else if (item.type === 'circle') iconName = 'shape-circle-plus';
+
+    return (
+      <TouchableOpacity
+        style={[styles.item, { borderBottomColor: colors.border }]}
+        onPress={() => onSelectAnnotation(item)}
+      >
+        <MaterialCommunityIcons
+          name={iconName}
+          size={20}
+          color={colors.primary}
+        />
+        <View style={styles.itemContent}>
+          <Text style={[typography.body, { color: colors.text }]} numberOfLines={1}>
+            {item.content || `${item.type} on page ${item.pageNumber}`}
+          </Text>
+          <Text style={[typography.caption, { color: colors.textSecondary }]}>
+            Page {item.pageNumber}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.surface, borderLeftColor: colors.border }]}>
@@ -50,13 +60,7 @@ const AnnotationPanel = ({ annotations, onClose, onSelectAnnotation, onAddAnnota
       <View style={[styles.footer, { borderTopColor: colors.border }]}>
         <TouchableOpacity style={[styles.actionBtn, { backgroundColor: colors.primary }]} onPress={() => onAddAnnotation('highlight')}>
           <MaterialCommunityIcons name="format-color-highlight" size={20} color={colors.surface} />
-          <Text style={[typography.button, { color: colors.surface, marginLeft: 8 }]}>Highlight</Text>
-        </TouchableOpacity>
-
-        {/* Coming soon button for drawing */}
-        <TouchableOpacity style={[styles.actionBtn, { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border }]} disabled>
-          <MaterialCommunityIcons name="draw" size={20} color={colors.textSecondary} />
-          <Text style={[typography.button, { color: colors.textSecondary, marginLeft: 8 }]}>Coming Soon</Text>
+          <Text style={[typography.button, { color: colors.surface, marginLeft: 8 }]}>Add New</Text>
         </TouchableOpacity>
       </View>
     </View>
