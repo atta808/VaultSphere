@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ROUTES } from '../config/routes';
 import VaultScreen from '../screens/VaultScreen';
 import DocumentDetailsScreen from '../screens/DocumentDetailsScreen';
+import DocumentViewerScreen from '../screens/DocumentViewerScreen';
 import AddDocumentScreen from '../screens/AddDocumentScreen';
 import { useTheme } from '../hooks/useTheme';
 
@@ -23,6 +24,7 @@ export default function VaultStack() {
     >
       <Stack.Screen name={ROUTES.VAULT} component={VaultScreen} options={{ headerShown: false }} />
       <Stack.Screen name={ROUTES.DOCUMENT_DETAILS} component={DocumentDetailsScreen} options={{ title: 'Document Details' }} />
+      <Stack.Screen name={ROUTES.DOCUMENT_VIEWER} component={DocumentViewerScreen} options={{ headerShown: false }} />
       <Stack.Screen name={ROUTES.ADD_DOCUMENT} component={AddDocumentScreen} options={{ title: 'Add Document' }} />
     </Stack.Navigator>
   );
