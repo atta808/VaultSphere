@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../hooks/useTheme';
 
 export const SphereInfoRow = memo(({
@@ -7,11 +7,12 @@ export const SphereInfoRow = memo(({
   value,
   showDivider = true,
   style,
+  onPress,
 }) => {
   const { colors, typography, spacing } = useTheme();
 
-  return (
-    <View style={style}>
+  const content = (
+    <>
       <View style={[styles.container, { paddingVertical: spacing[12] }]}>
         <Text style={[{ color: colors.text.secondary, flex: 1 }, typography.body2]}>
           {label}
@@ -23,8 +24,18 @@ export const SphereInfoRow = memo(({
       {showDivider && (
         <View style={{ height: 1, backgroundColor: colors.border }} />
       )}
-    </View>
+    </>
   );
+
+  if (onPress) {
+    return (
+      <TouchableOpacity style={style} onPress={onPress}>
+        {content}
+      </TouchableOpacity>
+    );
+  }
+
+  return <View style={style}>{content}</View>;
 });
 
 SphereInfoRow.displayName = 'SphereInfoRow';
