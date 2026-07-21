@@ -6,6 +6,7 @@ import documentViewerSchema from './migrations/004_document_viewer_schema';
 import * as aiAssistantSchema from './migrations/005_ai_assistant_schema';
 import phase14Annotations from './migrations/006_phase14_annotations';
 import phase16Collaboration from './migrations/007_phase16_collaboration';
+import phase17Workflow from './migrations/008_phase17_workflow';
 import { MigrationError } from './utils/errors';
 
 // Normalize migration 005 since it doesn't have version/description exported
@@ -25,6 +26,7 @@ const migrations = [
   aiAssistantMigration,
   phase14Annotations,
   phase16Collaboration,
+  phase17Workflow,
   // Future migrations will be added here
 ];
 

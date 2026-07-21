@@ -103,6 +103,13 @@ export default function DocumentDetailsScreen() {
 
           <DocumentIntelligenceCard documentId={documentId} />
 
+          <SphereSectionCard title="Workflow & Automations">
+            <SphereInfoRow label="Start Workflow" value="Initiate a process" onPress={() => navigation.navigate(ROUTES.WORKFLOW_STACK, { screen: ROUTES.WORKFLOW_DASHBOARD })} />
+            <SphereInfoRow label="Sign Document" value="Apply digital signature" onPress={() => navigation.navigate(ROUTES.WORKFLOW_STACK, { screen: ROUTES.SIGNATURE_MANAGER, params: { documentId } })} />
+            <SphereInfoRow label="Approvals" value="Manage document approvals" onPress={() => navigation.navigate(ROUTES.WORKFLOW_STACK, { screen: ROUTES.APPROVAL_INBOX, params: { documentId } })} />
+            <SphereInfoRow label="Lifecycle" value="View document states" showDivider={false} onPress={() => navigation.navigate(ROUTES.WORKFLOW_STACK, { screen: ROUTES.LIFECYCLE_TIMELINE, params: { documentId } })} />
+          </SphereSectionCard>
+
           <SphereSectionCard title="Collaboration">
             <SphereInfoRow label="Share Document" value="Invite or get link" onPress={() => navigation.navigate(ROUTES.COLLABORATION_STACK, { screen: ROUTES.COLLABORATION_DETAILS, params: { documentId } })} />
             <SphereInfoRow label="Comments & Mentions" value="View discussion" onPress={() => navigation.navigate(ROUTES.COLLABORATION_STACK, { screen: ROUTES.COLLABORATION_DETAILS, params: { documentId, tab: 'comments' } })} />
