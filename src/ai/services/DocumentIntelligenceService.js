@@ -52,17 +52,23 @@ class DocumentIntelligenceService {
       // Run AI Analysis
       const analysis = await AIAnalysisService.analyzeDocument(documentId, ocrResult.text);
 
+      // Entity Extraction (Background Task hook)
+      // We do this immediately after analysis before indexing.
+      // We will lazy-load EntityExtractionService to avoid cyclical deps.
+      const EntityExtractionService = require('./EntityExtractionService').default;
+      const entities = await EntityExtractionService.extractEntities(documentId, ocrResult.text);
+
       // Create Search Index
       await SearchIndexService.indexDocument(documentId, {
         ocrText: ocrResult.text,
         summary: analysis?.summary,
         keywords: analysis?.keywords,
-        entities: analysis?.entities,
+        entities: entities?.length > 0 ? entities : analysis?.entities,
         category: analysis?.classification,
         filename: document.name || document.originalName
       });
 
-      return { success: true, text: ocrResult.text, analysis };
+      return { success: true, text: ocrResult.text, analysis, entities };
 
     } catch (error) {
       Logger.error(`DocumentIntelligenceService failed for doc ${documentId}:`, error);
