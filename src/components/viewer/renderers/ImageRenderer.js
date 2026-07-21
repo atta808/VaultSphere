@@ -9,10 +9,12 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useTheme } from '../../../hooks/useTheme';
+import AnnotationOverlay from '../ui/AnnotationOverlay';
 
-const ImageRenderer = ({ uri, onZoomChange }) => {
+const ImageRenderer = ({ uri, onZoomChange, annotations = [], onSelectAnnotation }) => {
   const { colors, isDark } = useTheme();
   const [loading, setLoading] = useState(true);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   // Reanimated shared values for zoom and pan
   const scale = useSharedValue(1);
@@ -99,7 +101,13 @@ const ImageRenderer = ({ uri, onZoomChange }) => {
       </View>
 
       <GestureDetector gesture={composedGesture}>
-        <Animated.View style={[styles.imageContainer, animatedStyle]}>
+        <Animated.View
+          style={[styles.imageContainer, animatedStyle]}
+          onLayout={(e) => {
+            const { width, height } = e.nativeEvent.layout;
+            setDimensions({ width, height });
+          }}
+        >
           <Image
             source={{ uri }}
             style={styles.image}
@@ -107,6 +115,17 @@ const ImageRenderer = ({ uri, onZoomChange }) => {
             onLoadStart={() => setLoading(true)}
             onLoadEnd={() => setLoading(false)}
           />
+
+          {dimensions.width > 0 && annotations.length > 0 && (
+            <View style={StyleSheet.absoluteFillObject} pointerEvents="box-none">
+              <AnnotationOverlay
+                annotations={annotations}
+                width={dimensions.width}
+                height={dimensions.height}
+                onSelectAnnotation={onSelectAnnotation}
+              />
+            </View>
+          )}
         </Animated.View>
       </GestureDetector>
     </GestureHandlerRootView>

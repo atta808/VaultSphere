@@ -4,6 +4,7 @@ import ocrAiSchema from './migrations/002_ocr_ai_schema';
 import searchHistorySchema from './migrations/003_search_history_schema';
 import documentViewerSchema from './migrations/004_document_viewer_schema';
 import * as aiAssistantSchema from './migrations/005_ai_assistant_schema';
+import phase14Annotations from './migrations/006_phase14_annotations';
 import { MigrationError } from './utils/errors';
 
 // Normalize migration 005 since it doesn't have version/description exported
@@ -21,6 +22,7 @@ const migrations = [
   searchHistorySchema,
   documentViewerSchema,
   aiAssistantMigration,
+  phase14Annotations,
   // Future migrations will be added here
 ];
 
