@@ -224,6 +224,17 @@ export default function SettingsScreen() {
         </View>
       </SphereSectionCard>
 
+      <SphereSectionCard title="Collaboration & Workspaces">
+        <View style={{ borderRadius: 8, overflow: 'hidden' }}>
+          <SphereListItem
+            title="Collaboration Dashboard"
+            subtitle="Manage sharing, permissions, and audit logs"
+            icon="people"
+            onPress={() => navigation.navigate(ROUTES.COLLABORATION_STACK)}
+          />
+        </View>
+      </SphereSectionCard>
+
       <SphereSectionCard title="Appearance">
         <View style={{ borderRadius: 8, overflow: 'hidden' }}>
           <SphereListItem

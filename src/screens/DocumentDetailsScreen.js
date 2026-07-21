@@ -103,6 +103,13 @@ export default function DocumentDetailsScreen() {
 
           <DocumentIntelligenceCard documentId={documentId} />
 
+          <SphereSectionCard title="Collaboration">
+            <SphereInfoRow label="Share Document" value="Invite or get link" onPress={() => navigation.navigate(ROUTES.COLLABORATION_STACK, { screen: ROUTES.COLLABORATION_DETAILS, params: { documentId } })} />
+            <SphereInfoRow label="Comments & Mentions" value="View discussion" onPress={() => navigation.navigate(ROUTES.COLLABORATION_STACK, { screen: ROUTES.COLLABORATION_DETAILS, params: { documentId, tab: 'comments' } })} />
+            <SphereInfoRow label="Version History" value="Compare & Restore" onPress={() => navigation.navigate(ROUTES.COLLABORATION_STACK, { screen: ROUTES.VERSION_HISTORY, params: { documentId } })} />
+            <SphereInfoRow label="Access Permissions" value="Manage Roles" showDivider={false} onPress={() => navigation.navigate(ROUTES.COLLABORATION_STACK, { screen: ROUTES.PERMISSION_MANAGER, params: { documentId } })} />
+          </SphereSectionCard>
+
           <View style={{ height: 100 }} />
         </View>
       </ScreenContainer>

@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ROUTES } from '../config/routes';
 import SettingsScreen from '../screens/SettingsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import CollaborationStack from './CollaborationStack';
 import { useTheme } from '../hooks/useTheme';
 
 const Stack = createNativeStackNavigator();
@@ -22,6 +23,7 @@ export default function SettingsStack() {
     >
       <Stack.Screen name={ROUTES.SETTINGS} component={SettingsScreen} options={{ headerShown: false }} />
       <Stack.Screen name={ROUTES.PROFILE} component={ProfileScreen} options={{ title: 'Profile' }} />
+      <Stack.Screen name={ROUTES.COLLABORATION_STACK} component={CollaborationStack} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
