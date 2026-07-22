@@ -1,4 +1,4 @@
-export const ROUTES = {
+const ROUTES = {
   // Roots
   SPLASH: 'Splash',
   MAIN_TABS: 'MainTabs',
@@ -49,3 +49,16 @@ export const ROUTES = {
   VERIFY_PIN: 'VerifyPin',
   CHANGE_PIN: 'ChangePin',
 };
+
+// Workflow (Phase 17)
+ROUTES.WORKFLOW_STACK = 'WorkflowStack';
+ROUTES.WORKFLOW_DASHBOARD = 'WorkflowDashboard';
+ROUTES.WORKFLOW_TEMPLATES = 'WorkflowTemplates';
+ROUTES.APPROVAL_INBOX = 'ApprovalInbox';
+ROUTES.MY_TASKS = 'MyTasks';
+ROUTES.TASK_DETAILS = 'TaskDetails';
+ROUTES.WORKFLOW_HISTORY = 'WorkflowHistory';
+ROUTES.SIGNATURE_MANAGER = 'SignatureManager';
+ROUTES.AUTOMATION_RULES = 'AutomationRules';
+ROUTES.LIFECYCLE_TIMELINE = 'LifecycleTimeline';
+export { ROUTES };

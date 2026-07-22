@@ -232,6 +232,13 @@ export default function SettingsScreen() {
             icon="people"
             onPress={() => navigation.navigate(ROUTES.COLLABORATION_STACK)}
           />
+
+          <List.Item
+            title="Workflow & Automations"
+            description="Manage business processes"
+            left={props => <List.Icon {...props} icon="robot" />}
+            onPress={() => navigation.navigate(ROUTES.WORKFLOW_STACK)}
+          />
         </View>
       </SphereSectionCard>
 

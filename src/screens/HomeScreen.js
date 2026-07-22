@@ -47,6 +47,21 @@ export default function HomeScreen() {
         />
       </View>
 
+      <View style={{ flexDirection: 'row', gap: spacing[16], marginBottom: spacing[24] }}>
+        <SphereStatCard
+          title="Pending Approvals"
+          value="0"
+          icon="check-decagram"
+          onPress={() => navigation.navigate(ROUTES.SETTINGS_STACK, { screen: ROUTES.WORKFLOW_STACK, params: { screen: ROUTES.APPROVAL_INBOX }})}
+        />
+        <SphereStatCard
+          title="My Tasks"
+          value="0"
+          icon="format-list-checks"
+          onPress={() => navigation.navigate(ROUTES.SETTINGS_STACK, { screen: ROUTES.WORKFLOW_STACK, params: { screen: ROUTES.MY_TASKS }})}
+        />
+      </View>
+
       <SphereSectionCard title="Quick Actions">
         <SphereActionCard
           title="Add Document"
