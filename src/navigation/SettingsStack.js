@@ -7,6 +7,7 @@ import CollaborationStack from './CollaborationStack';
 import WorkflowStack from './WorkflowStack';
 import { KnowledgeStack } from './KnowledgeStack';
 import { useTheme } from '../hooks/useTheme';
+import EnterpriseStack from './EnterpriseStack';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,7 @@ export default function SettingsStack() {
       <Stack.Screen name={ROUTES.COLLABORATION_STACK} component={CollaborationStack} options={{ headerShown: false }} />
       <Stack.Screen name={ROUTES.WORKFLOW_STACK} component={WorkflowStack} options={{ headerShown: false }} />
       <Stack.Screen name={ROUTES.KNOWLEDGE_STACK} component={KnowledgeStack} options={{ headerShown: false }} />
+      <Stack.Screen name={ROUTES.ENTERPRISE_STACK} component={EnterpriseStack} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }

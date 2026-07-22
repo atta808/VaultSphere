@@ -62,6 +62,21 @@ export default function HomeScreen() {
         />
       </View>
 
+      <View style={{ flexDirection: 'row', gap: spacing[16], paddingHorizontal: spacing[16], marginBottom: spacing[24] }}>
+        <SphereStatCard
+          title="Pending Records"
+          value="0"
+          icon="file-document-outline"
+          onPress={() => navigation.navigate(ROUTES.SETTINGS_STACK, { screen: ROUTES.ENTERPRISE_STACK, params: { screen: ROUTES.RECORDS_MANAGER }})}
+        />
+        <SphereStatCard
+          title="Legal Holds"
+          value="0"
+          icon="scale-balance"
+          onPress={() => navigation.navigate(ROUTES.SETTINGS_STACK, { screen: ROUTES.ENTERPRISE_STACK, params: { screen: ROUTES.LEGAL_HOLDS }})}
+        />
+      </View>
+
       <SphereSectionCard title="Quick Actions">
         <SphereActionCard
           title="Add Document"

@@ -117,6 +117,13 @@ export default function DocumentDetailsScreen() {
             <SphereInfoRow label="Access Permissions" value="Manage Roles" showDivider={false} onPress={() => navigation.navigate(ROUTES.COLLABORATION_STACK, { screen: ROUTES.PERMISSION_MANAGER, params: { documentId } })} />
           </SphereSectionCard>
 
+          <SphereSectionCard title="Enterprise Governance">
+            <SphereInfoRow label="Declare Record" value="Make this a formal record" onPress={() => navigation.navigate(ROUTES.SETTINGS_STACK, { screen: ROUTES.ENTERPRISE_STACK, params: { screen: ROUTES.RECORDS_MANAGER, params: { documentId } } })} />
+            <SphereInfoRow label="Classification" value="Set classification level" onPress={() => navigation.navigate(ROUTES.SETTINGS_STACK, { screen: ROUTES.ENTERPRISE_STACK, params: { screen: ROUTES.COMPLIANCE_CENTER } })} />
+            <SphereInfoRow label="Retention Policy" value="View assigned policies" onPress={() => navigation.navigate(ROUTES.SETTINGS_STACK, { screen: ROUTES.ENTERPRISE_STACK, params: { screen: ROUTES.RETENTION_POLICIES } })} />
+            <SphereInfoRow label="Legal Hold" value="Manage legal holds" showDivider={false} onPress={() => navigation.navigate(ROUTES.SETTINGS_STACK, { screen: ROUTES.ENTERPRISE_STACK, params: { screen: ROUTES.LEGAL_HOLDS } })} />
+          </SphereSectionCard>
+
           <View style={{ height: 100 }} />
         </View>
       </ScreenContainer>

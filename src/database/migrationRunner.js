@@ -9,6 +9,7 @@ import phase16Collaboration from './migrations/007_phase16_collaboration';
 import phase17Workflow from './migrations/008_phase17_workflow';
 import phase18KnowledgeGraph from './migrations/009_phase18_knowledge_graph';
 import phase19AgentPlatform from './migrations/010_phase19_agent_platform';
+import phase20EnterpriseGovernance from './migrations/011_phase20_enterprise_governance';
 import { MigrationError } from './utils/errors';
 
 // Normalize migration 005 since it doesn't have version/description exported
@@ -31,6 +32,7 @@ const migrations = [
   phase17Workflow,
   phase18KnowledgeGraph,
   phase19AgentPlatform,
+  phase20EnterpriseGovernance,
   // Future migrations will be added here
 ];
 

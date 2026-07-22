@@ -249,6 +249,17 @@ export default function SettingsScreen() {
         </View>
       </SphereSectionCard>
 
+      <SphereSectionCard title="Enterprise & Governance">
+        <View style={{ borderRadius: 8, overflow: 'hidden' }}>
+          <List.Item
+            title="Enterprise ECM"
+            description="Records, Retention, Compliance & RBAC"
+            left={props => <List.Icon {...props} icon="domain" />}
+            onPress={() => navigation.navigate(ROUTES.ENTERPRISE_STACK)}
+          />
+        </View>
+      </SphereSectionCard>
+
       <SphereSectionCard title="Appearance">
         <View style={{ borderRadius: 8, overflow: 'hidden' }}>
           <SphereListItem
