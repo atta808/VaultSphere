@@ -26,6 +26,17 @@ const ROUTES = {
   AI_WORKSPACE: 'AIWorkspace',
   COMPARISON_SCREEN: 'ComparisonScreen',
 
+  // Phase 19 - AI Agent Platform
+  AI_AGENT_HUB: 'AIAgentHub',
+  AGENT_MANAGER: 'AgentManager',
+  AUTOMATION_HUB: 'AutomationHub',
+  SCHEDULED_JOBS: 'ScheduledJobs',
+  AI_INSIGHTS: 'AIInsights',
+  PROMPT_LIBRARY: 'PromptLibrary',
+  AGENT_ACTIVITY: 'AgentActivity',
+  EXECUTION_HISTORY: 'ExecutionHistory',
+  PENDING_APPROVALS: 'PendingApprovals',
+
   SETTINGS: 'Settings',
   PROFILE: 'Profile',
 
