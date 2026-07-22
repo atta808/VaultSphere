@@ -61,4 +61,15 @@ ROUTES.WORKFLOW_HISTORY = 'WorkflowHistory';
 ROUTES.SIGNATURE_MANAGER = 'SignatureManager';
 ROUTES.AUTOMATION_RULES = 'AutomationRules';
 ROUTES.LIFECYCLE_TIMELINE = 'LifecycleTimeline';
+
+// Phase 18 - Knowledge Graph
+ROUTES.KNOWLEDGE_STACK = 'KnowledgeStack';
+ROUTES.KNOWLEDGE_DASHBOARD = 'KnowledgeDashboard';
+ROUTES.KNOWLEDGE_GRAPH_EXPLORER = 'KnowledgeGraphExplorer';
+ROUTES.SEMANTIC_SEARCH = 'SemanticSearch';
+ROUTES.AI_TOPICS = 'AITopics';
+ROUTES.RECOMMENDATIONS = 'Recommendations';
+ROUTES.RELATED_DOCUMENTS = 'RelatedDocuments';
+ROUTES.RELATIONSHIP_MANAGER = 'RelationshipManager';
+
 export { ROUTES };
