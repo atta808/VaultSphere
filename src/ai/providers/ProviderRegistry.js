@@ -3,6 +3,7 @@ class ProviderRegistry {
     this.providers = new Map();
     this.defaultOCRProvider = null;
     this.defaultAnalysisProvider = null;
+    this.defaultEmbeddingProvider = null;
   }
 
   registerProvider(id, provider) {
@@ -33,6 +34,15 @@ class ProviderRegistry {
   getAnalysisProvider() {
     if (!this.defaultAnalysisProvider) throw new Error("No default Analysis provider set.");
     return this.getProvider(this.defaultAnalysisProvider);
+  }
+
+  setDefaultEmbeddingProvider(id) {
+    this.defaultEmbeddingProvider = id;
+  }
+
+  getEmbeddingProvider() {
+    if (!this.defaultEmbeddingProvider) throw new Error("No default Embedding provider set.");
+    return this.getProvider(this.defaultEmbeddingProvider);
   }
 }
 

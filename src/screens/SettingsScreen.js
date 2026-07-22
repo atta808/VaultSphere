@@ -239,6 +239,13 @@ export default function SettingsScreen() {
             left={props => <List.Icon {...props} icon="robot" />}
             onPress={() => navigation.navigate(ROUTES.WORKFLOW_STACK)}
           />
+
+          <List.Item
+            title="Enterprise Knowledge"
+            description="Knowledge Graph & Semantic Search"
+            left={props => <List.Icon {...props} icon="brain" />}
+            onPress={() => navigation.navigate(ROUTES.KNOWLEDGE_STACK)}
+          />
         </View>
       </SphereSectionCard>
 

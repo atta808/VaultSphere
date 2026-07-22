@@ -1,0 +1,11 @@
+1. Implement Phase 18 database schema migration.
+2. Implement Embedding Providers (Cloud and Local).
+3. Implement core Knowledge & Semantic Services (EmbeddingService, VectorIndexService, SemanticSearchService, SimilarityEngine).
+4. Implement Knowledge Graph & Recommendation Services (KnowledgeGraphService, DocumentRelationshipService, RecommendationService, TopicExtractionService).
+5. Implement Retrieval & Synchronization Services (RetrievalService, KnowledgeSyncService).
+6. Implement Repositories for Phase 18.
+7. Update OCR Pipeline & Document Intelligence for document chunking and embeddings generation.
+8. Implement Knowledge UI screens.
+9. Write Documentation (docs/phase18).
+10. Pre commit step.
+11. Submit.

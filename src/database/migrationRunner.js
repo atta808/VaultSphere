@@ -7,6 +7,7 @@ import * as aiAssistantSchema from './migrations/005_ai_assistant_schema';
 import phase14Annotations from './migrations/006_phase14_annotations';
 import phase16Collaboration from './migrations/007_phase16_collaboration';
 import phase17Workflow from './migrations/008_phase17_workflow';
+import phase18KnowledgeGraph from './migrations/009_phase18_knowledge_graph';
 import { MigrationError } from './utils/errors';
 
 // Normalize migration 005 since it doesn't have version/description exported
@@ -27,6 +28,7 @@ const migrations = [
   phase14Annotations,
   phase16Collaboration,
   phase17Workflow,
+  phase18KnowledgeGraph,
   // Future migrations will be added here
 ];
 

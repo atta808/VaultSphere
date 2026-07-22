@@ -58,6 +58,45 @@ class DocumentIntelligenceService {
       const EntityExtractionService = require('./EntityExtractionService').default;
       const entities = await EntityExtractionService.extractEntities(documentId, ocrResult.text);
 
+      // Phase 18: Chunking & Semantic Embeddings Generation
+      const EmbeddingService = require('./knowledge/EmbeddingService').default;
+      const SemanticIndexRepository = require('../../database/repositories/knowledge/SemanticIndexRepository').default;
+
+      const chunks = this.chunkText(ocrResult.text);
+      for (let i = 0; i < chunks.length; i++) {
+        const chunkText = chunks[i];
+
+        // Generate embedding
+        let embeddingId = null;
+        try {
+          const savedEmbedding = await EmbeddingService.generateAndSaveEmbedding(
+             `${documentId}_chunk_${i}`,
+             'semantic_chunk',
+             chunkText
+          );
+          embeddingId = savedEmbedding.id;
+        } catch (e) {
+          Logger.warn(`Failed to generate embedding for doc ${documentId} chunk ${i}`, e);
+        }
+
+        // Save chunk
+        await SemanticIndexRepository.create({
+          documentId,
+          chunkIndex: i,
+          pageNumber: 1, // Assume page 1 if not paginated properly yet
+          characterOffset: 0, // Placeholder
+          text: chunkText,
+          embeddingId
+        });
+      }
+
+      // Phase 18: Detect Relationships & Extract Topics
+      const DocumentRelationshipService = require('./knowledge/DocumentRelationshipService').default;
+      const TopicExtractionService = require('./knowledge/TopicExtractionService').default;
+
+      await DocumentRelationshipService.detectSimilarDocuments(documentId);
+      await TopicExtractionService.extractAndAssignTopics(documentId, ocrResult.text);
+
       // Create Search Index
       await SearchIndexService.indexDocument(documentId, {
         ocrText: ocrResult.text,
@@ -74,6 +113,39 @@ class DocumentIntelligenceService {
       Logger.error(`DocumentIntelligenceService failed for doc ${documentId}:`, error);
       throw error;
     }
+  }
+
+  /**
+   * Helper to chunk text into approx 500-1000 tokens (we use characters for simplicity).
+   */
+  chunkText(text, chunkSize = 2000, overlap = 200) {
+    if (!text) return [];
+    const chunks = [];
+    let startIndex = 0;
+
+    while (startIndex < text.length) {
+      let endIndex = startIndex + chunkSize;
+      // Try to break at paragraph or newline if possible
+      if (endIndex < text.length) {
+        const nextNewline = text.indexOf('\n\n', endIndex);
+        const prevNewline = text.lastIndexOf('\n\n', endIndex);
+        if (nextNewline !== -1 && nextNewline - endIndex < 500) {
+            endIndex = nextNewline + 2;
+        } else if (prevNewline !== -1 && endIndex - prevNewline < 500) {
+            endIndex = prevNewline + 2;
+        }
+      } else {
+        endIndex = text.length;
+      }
+
+      const chunk = text.slice(startIndex, endIndex).trim();
+      if (chunk.length > 0) chunks.push(chunk);
+
+      startIndex = endIndex - overlap;
+      if (startIndex >= text.length || endIndex === text.length) break;
+    }
+
+    return chunks;
   }
 }
 
