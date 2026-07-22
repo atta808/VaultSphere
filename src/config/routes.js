@@ -83,4 +83,20 @@ ROUTES.RECOMMENDATIONS = 'Recommendations';
 ROUTES.RELATED_DOCUMENTS = 'RelatedDocuments';
 ROUTES.RELATIONSHIP_MANAGER = 'RelationshipManager';
 
+// Phase 20 - Enterprise Governance
+ROUTES.ENTERPRISE_STACK = 'EnterpriseStack';
+ROUTES.ENTERPRISE_DASHBOARD = 'EnterpriseDashboard';
+ROUTES.RECORDS_MANAGER = 'RecordsManager';
+ROUTES.RETENTION_POLICIES = 'RetentionPolicies';
+ROUTES.LEGAL_HOLDS = 'LegalHolds';
+ROUTES.COMPLIANCE_CENTER = 'ComplianceCenter';
+ROUTES.ORGANIZATION_MANAGER = 'OrganizationManager';
+ROUTES.DEPARTMENT_MANAGER = 'DepartmentManager';
+ROUTES.ROLE_MANAGER = 'RoleManager';
+
+ROUTES.TEAM_MANAGER = 'TeamManager';
+ROUTES.GOVERNANCE_RULES = 'GovernanceRules';
+ROUTES.ADMINISTRATION_CENTER = 'AdministrationCenter';
+ROUTES.COMPLIANCE_REPORTS = 'ComplianceReports';
+
 export { ROUTES };
