@@ -99,4 +99,14 @@ ROUTES.GOVERNANCE_RULES = 'GovernanceRules';
 ROUTES.ADMINISTRATION_CENTER = 'AdministrationCenter';
 ROUTES.COMPLIANCE_REPORTS = 'ComplianceReports';
 
+// Phase 21 - Analytics & BI
+ROUTES.ANALYTICS_CENTER = 'AnalyticsCenter';
+ROUTES.EXECUTIVE_DASHBOARD = 'ExecutiveDashboard';
+ROUTES.KPI_MANAGER = 'KPIManager';
+ROUTES.REPORT_CENTER = 'ReportCenter';
+ROUTES.TREND_EXPLORER = 'TrendExplorer';
+ROUTES.FORECAST_CENTER = 'ForecastCenter';
+ROUTES.EXECUTIVE_INSIGHTS = 'ExecutiveInsights';
+ROUTES.DASHBOARD_DESIGNER = 'DashboardDesigner';
+
 export { ROUTES };

@@ -257,6 +257,12 @@ export default function SettingsScreen() {
             left={props => <List.Icon {...props} icon="domain" />}
             onPress={() => navigation.navigate(ROUTES.ENTERPRISE_STACK)}
           />
+          <List.Item
+            title="Enterprise Analytics & BI"
+            description="Dashboards, KPIs, Reports & Insights"
+            left={props => <List.Icon {...props} icon="chart-bar" />}
+            onPress={() => navigation.navigate(ROUTES.ENTERPRISE_STACK, { screen: ROUTES.ANALYTICS_CENTER })}
+          />
         </View>
       </SphereSectionCard>
 

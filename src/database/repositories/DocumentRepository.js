@@ -25,4 +25,14 @@ export default class DocumentRepository extends BaseRepository {
       `DELETE FROM ${this.tableName} WHERE deletedAt IS NOT NULL`
     );
   }
+
+  async countDocuments() {
+    const res = await this.db.getFirstAsync(`SELECT COUNT(*) as c FROM ${this.tableName}`);
+    return res?.c || 0;
+  }
+
+  async sumStorageUsage() {
+    const res = await this.db.getFirstAsync(`SELECT SUM(fileSize) as s FROM ${this.tableName}`);
+    return res?.s || 0;
+  }
 }
