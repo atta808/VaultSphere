@@ -109,4 +109,14 @@ ROUTES.FORECAST_CENTER = 'ForecastCenter';
 ROUTES.EXECUTIVE_INSIGHTS = 'ExecutiveInsights';
 ROUTES.DASHBOARD_DESIGNER = 'DashboardDesigner';
 
+// Phase 22 - Enterprise Integration Hub
+ROUTES.INTEGRATION_HUB = 'IntegrationHub';
+ROUTES.CONNECTOR_MANAGER = 'ConnectorManager';
+ROUTES.API_MANAGER = 'ApiManager';
+ROUTES.WEBHOOK_MANAGER = 'WebhookManager';
+ROUTES.IMPORT_CENTER = 'ImportCenter';
+ROUTES.EXPORT_CENTER = 'ExportCenter';
+ROUTES.CONNECTOR_HEALTH = 'ConnectorHealth';
+ROUTES.INTEGRATION_ACTIVITY = 'IntegrationActivity';
+
 export { ROUTES };
