@@ -91,6 +91,12 @@ export default function HomeScreen() {
           onPress={() => navigation.navigate(ROUTES.FAVORITES)}
         />
         <SphereActionCard
+          title="Enterprise Search"
+          subtitle="Federated global discovery"
+          icon="magnify"
+          onPress={() => navigation.navigate(ROUTES.SETTINGS_STACK, { screen: ROUTES.ENTERPRISE_STACK, params: { screen: ROUTES.ENTERPRISE_SEARCH }})}
+        />
+        <SphereActionCard
           title="Notifications"
           subtitle="Check your recent alerts"
           icon="notifications"

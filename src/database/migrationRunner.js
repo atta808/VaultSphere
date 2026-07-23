@@ -12,6 +12,7 @@ import phase19AgentPlatform from './migrations/010_phase19_agent_platform';
 import phase20EnterpriseGovernance from './migrations/011_phase20_enterprise_governance';
 import phase21Analytics from './migrations/012_phase21_analytics';
 import phase22Integration from './migrations/013_phase22_integration';
+import phase23FederatedSearch from './migrations/014_phase23_federated_search';
 import { MigrationError } from './utils/errors';
 
 // Normalize migration 005 since it doesn't have version/description exported
@@ -37,6 +38,7 @@ const migrations = [
   phase20EnterpriseGovernance,
   phase21Analytics,
   phase22Integration,
+  phase23FederatedSearch,
   // Future migrations will be added here
 ];
 

@@ -119,4 +119,13 @@ ROUTES.EXPORT_CENTER = 'ExportCenter';
 ROUTES.CONNECTOR_HEALTH = 'ConnectorHealth';
 ROUTES.INTEGRATION_ACTIVITY = 'IntegrationActivity';
 
+// Phase 23 - Federated Search
+ROUTES.ENTERPRISE_SEARCH = 'EnterpriseSearch';
+ROUTES.SEARCH_PROVIDERS = 'SearchProviders';
+ROUTES.SAVED_SEARCHES = 'SavedSearches';
+ROUTES.SEARCH_ANALYTICS = 'SearchAnalytics';
+ROUTES.SEARCH_SUGGESTIONS = 'SearchSuggestions';
+ROUTES.PROVIDER_HEALTH = 'ProviderHealth';
+ROUTES.SEARCH_SETTINGS = 'SearchSettings';
+
 export { ROUTES };

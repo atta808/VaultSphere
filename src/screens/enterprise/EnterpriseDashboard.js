@@ -38,6 +38,15 @@ export const EnterpriseDashboard = () => {
           <Button onPress={() => navigation.navigate(ROUTES.INTEGRATION_HUB)}>Open Integration Hub</Button>
         </Card.Actions>
       </Card>
+      <Card style={styles.card}>
+        <Card.Content>
+          <Title>Enterprise Search</Title>
+          <Text>Federated search across internal and external knowledge bases.</Text>
+        </Card.Content>
+        <Card.Actions>
+          <Button onPress={() => navigation.navigate(ROUTES.ENTERPRISE_SEARCH)}>Open Search Portal</Button>
+        </Card.Actions>
+      </Card>
     </ScrollView>
   );
 };

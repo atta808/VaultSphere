@@ -36,6 +36,15 @@ import { ExportCenter } from '../screens/enterprise/integration/ExportCenter';
 import { ConnectorHealth } from '../screens/enterprise/integration/ConnectorHealth';
 import { IntegrationActivity } from '../screens/enterprise/integration/IntegrationActivity';
 
+// Federated Search (Phase 23)
+import { EnterpriseSearch } from '../screens/enterprise/search/EnterpriseSearch';
+import { SearchProviders } from '../screens/enterprise/search/SearchProviders';
+import { SavedSearches } from '../screens/enterprise/search/SavedSearches';
+import { SearchAnalytics } from '../screens/enterprise/search/SearchAnalytics';
+import { SearchSuggestions } from '../screens/enterprise/search/SearchSuggestions';
+import { ProviderHealth } from '../screens/enterprise/search/ProviderHealth';
+import { SearchSettings } from '../screens/enterprise/search/SearchSettings';
+
 const Stack = createNativeStackNavigator();
 
 export const EnterpriseStack = () => {
@@ -77,6 +86,14 @@ export const EnterpriseStack = () => {
       <Stack.Screen name={ROUTES.EXPORT_CENTER} component={ExportCenter} options={{ title: 'Export Center' }} />
       <Stack.Screen name={ROUTES.CONNECTOR_HEALTH} component={ConnectorHealth} options={{ title: 'Connector Health' }} />
       <Stack.Screen name={ROUTES.INTEGRATION_ACTIVITY} component={IntegrationActivity} options={{ title: 'Integration Activity' }} />
+
+      <Stack.Screen name={ROUTES.ENTERPRISE_SEARCH} component={EnterpriseSearch} options={{ title: 'Enterprise Search' }} />
+      <Stack.Screen name={ROUTES.SEARCH_PROVIDERS} component={SearchProviders} options={{ title: 'Search Providers' }} />
+      <Stack.Screen name={ROUTES.SAVED_SEARCHES} component={SavedSearches} options={{ title: 'Saved Searches' }} />
+      <Stack.Screen name={ROUTES.SEARCH_ANALYTICS} component={SearchAnalytics} options={{ title: 'Search Analytics' }} />
+      <Stack.Screen name={ROUTES.SEARCH_SUGGESTIONS} component={SearchSuggestions} options={{ title: 'Search Suggestions' }} />
+      <Stack.Screen name={ROUTES.PROVIDER_HEALTH} component={ProviderHealth} options={{ title: 'Provider Health' }} />
+      <Stack.Screen name={ROUTES.SEARCH_SETTINGS} component={SearchSettings} options={{ title: 'Search Settings' }} />
     </Stack.Navigator>
   );
 };
