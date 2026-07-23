@@ -26,6 +26,16 @@ import { ForecastCenter } from '../screens/enterprise/analytics/ForecastCenter';
 import { ExecutiveInsights } from '../screens/enterprise/analytics/ExecutiveInsights';
 import { DashboardDesigner } from '../screens/enterprise/analytics/DashboardDesigner';
 
+// Integrations (Phase 22)
+import { IntegrationHub } from '../screens/enterprise/integration/IntegrationHub';
+import { ConnectorManager } from '../screens/enterprise/integration/ConnectorManager';
+import { ApiManager } from '../screens/enterprise/integration/ApiManager';
+import { WebhookManager } from '../screens/enterprise/integration/WebhookManager';
+import { ImportCenter } from '../screens/enterprise/integration/ImportCenter';
+import { ExportCenter } from '../screens/enterprise/integration/ExportCenter';
+import { ConnectorHealth } from '../screens/enterprise/integration/ConnectorHealth';
+import { IntegrationActivity } from '../screens/enterprise/integration/IntegrationActivity';
+
 const Stack = createNativeStackNavigator();
 
 export const EnterpriseStack = () => {
@@ -58,6 +68,15 @@ export const EnterpriseStack = () => {
       <Stack.Screen name={ROUTES.FORECAST_CENTER} component={ForecastCenter} options={{ title: 'Forecast Center' }} />
       <Stack.Screen name={ROUTES.EXECUTIVE_INSIGHTS} component={ExecutiveInsights} options={{ title: 'Executive Insights' }} />
       <Stack.Screen name={ROUTES.DASHBOARD_DESIGNER} component={DashboardDesigner} options={{ title: 'Dashboard Designer' }} />
+
+      <Stack.Screen name={ROUTES.INTEGRATION_HUB} component={IntegrationHub} options={{ title: 'Integration Hub' }} />
+      <Stack.Screen name={ROUTES.CONNECTOR_MANAGER} component={ConnectorManager} options={{ title: 'Connector Manager' }} />
+      <Stack.Screen name={ROUTES.API_MANAGER} component={ApiManager} options={{ title: 'API Manager' }} />
+      <Stack.Screen name={ROUTES.WEBHOOK_MANAGER} component={WebhookManager} options={{ title: 'Webhook Manager' }} />
+      <Stack.Screen name={ROUTES.IMPORT_CENTER} component={ImportCenter} options={{ title: 'Import Center' }} />
+      <Stack.Screen name={ROUTES.EXPORT_CENTER} component={ExportCenter} options={{ title: 'Export Center' }} />
+      <Stack.Screen name={ROUTES.CONNECTOR_HEALTH} component={ConnectorHealth} options={{ title: 'Connector Health' }} />
+      <Stack.Screen name={ROUTES.INTEGRATION_ACTIVITY} component={IntegrationActivity} options={{ title: 'Integration Activity' }} />
     </Stack.Navigator>
   );
 };

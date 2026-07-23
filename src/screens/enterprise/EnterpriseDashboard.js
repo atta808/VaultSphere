@@ -1,9 +1,12 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Text, Card, Title, useTheme } from 'react-native-paper';
+import { Text, Card, Title, useTheme, Button } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { ROUTES } from '../../config/routes';
 
 export const EnterpriseDashboard = () => {
   const theme = useTheme();
+  const navigation = useNavigation();
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -25,6 +28,15 @@ export const EnterpriseDashboard = () => {
           <Title>Compliance Alerts</Title>
           <Text>All systems nominal</Text>
         </Card.Content>
+      </Card>
+      <Card style={styles.card}>
+        <Card.Content>
+          <Title>Integrations</Title>
+          <Text>Manage external connectors and data pipelines.</Text>
+        </Card.Content>
+        <Card.Actions>
+          <Button onPress={() => navigation.navigate(ROUTES.INTEGRATION_HUB)}>Open Integration Hub</Button>
+        </Card.Actions>
       </Card>
     </ScrollView>
   );
